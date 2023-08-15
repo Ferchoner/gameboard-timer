@@ -8,15 +8,6 @@ const userStore = useUserStore();
       <NuxtLink to="/" class="d-flex align-items-center col-2 col-md-3 mb-2 mb-md-0 ms-md-3 text-dark text-decoration-none">
         <img src="~/assets/images/clock_logo.png" alt="Timer for friends" class="img-logo">
       </NuxtLink>
-
-      <ul class="nav col-auto mb-2 justify-content-center mb-md-0">
-        <li>
-          <NuxtLink to="/" class="nav-link px-2 link-secondary">Home</NuxtLink>
-        </li>
-        <li>
-          <NuxtLink to="/timers" class="nav-link px-2 link-secondary">Timers</NuxtLink>
-        </li>
-      </ul>
       <div v-if="!userStore.usrChecked" class="col-4 col-md-3 text-end mb-2 mb-md-0 me-md-3 loadings-buttons">
         <button type="button" class="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#login-backdrop">Loading</button>
       </div>

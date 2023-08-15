@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <PageHome />
-  </div>
+  <PageTimers />
 </template>
 
 <script>
