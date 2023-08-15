@@ -1,0 +1,26 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@sidebase/nuxt-session": "^0.2.7",
+    "@types/node": "^18.17.1",
+    "nuxt": "^3.6.5"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@nuxtjs/robots": "^3.0.0",
+    "@pinia/nuxt": "^0.4.11",
+    "bootstrap": "^5.3.1",
+    "firebase": "^10.1.0",
+    "pinia": "^2.1.6",
+    "sass": "^1.64.2"
+  }
+}
