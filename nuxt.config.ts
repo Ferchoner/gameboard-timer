@@ -30,8 +30,7 @@ export default defineNuxtConfig({
         }
     },
     modules: [
-        '@pinia/nuxt',
-        '@sidebase/nuxt-session'
+        '@pinia/nuxt'
     ],
     pinia: {
         autoImports: [
