@@ -28,7 +28,7 @@ export default defineNuxtConfig({
             name: 'slide',
             mode: 'out-in'
         },
-        baseURL: '/gameboard-time/'
+        baseURL: '/gameboard-timer/'
     },
     modules: [
         '@pinia/nuxt'
