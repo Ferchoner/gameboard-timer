@@ -7,10 +7,9 @@ export default defineNuxtConfig({
             meta: [
                 { charset: 'utf-8'},
                 { name: 'viewport', content: 'width=device-width, initial-scale=1'},
-                { hid: 'description', name: 'description', content: 'Darmico Constructora'},
+                { hid: 'description', name: 'description', content: 'Gameboard timers'},
                 { name: 'msapplication-TileColor', content: '#ffffff'},
-                { name: 'theme-color', content: '#ffffff'},
-                { name: 'csrf-token', content: '{{ csrf_token() }}'}
+                { name: 'theme-color', content: '#ffffff'}
             ],
             link: [
                 {rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png'},
