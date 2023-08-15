@@ -27,7 +27,8 @@ export default defineNuxtConfig({
         pageTransition: {
             name: 'slide',
             mode: 'out-in'
-        }
+        },
+        baseURL: '/gameboard-time/'
     },
     modules: [
         '@pinia/nuxt'
