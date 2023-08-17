@@ -4,7 +4,10 @@ const timerStore = useTimerStore();
 const route = useRoute();
 const timerIndex = route.params.id;
 useHead({
-  title: 'Timer for friends | Time App'
+  title: 'Timer for friends | Time App',
+  bodyAttrs: {
+    class: 'blue-body'
+  }
 })
 </script>
 
@@ -210,7 +213,7 @@ export default {
 <style scoped lang="scss">
 .timer-app {
   background-color: #02204b;
-  height: 100vh;
+  height: calc(100vh - 20px);
   color: #ffffff;
 
   .player-container {
@@ -345,6 +348,14 @@ export default {
     &.players-12 {
       position: absolute;
       bottom: 15px;
+    }
+
+    &.players-2,
+    &.players-3,
+    &.players-4 {
+       .btn {
+         padding: 12px 14px;
+       }
     }
   }
 }
