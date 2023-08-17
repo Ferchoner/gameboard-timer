@@ -355,6 +355,10 @@ export default {
     &.players-4 {
        .btn {
          padding: 12px 14px;
+
+         &.me-2 {
+           margin-right: 0.8rem !important;
+         }
        }
     }
   }
