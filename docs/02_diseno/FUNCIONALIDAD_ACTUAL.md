@@ -52,10 +52,24 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 
 ### Timer en marcha (`components/Page/TimerApp.vue`)
 
-- El tiempo se lleva en centésimas de segundo (`timeInSeconds[i] = minutos × 6000`); un
-  `setInterval` de 10 ms resta 1.
-- Hasta 12 jugadores (los arreglos internos tienen 12 posiciones).
-- Al llegar a 0 se para ese contador y suena `#time_over`.
+- El reloj de cada jugador vive en `composables/useCountdown.ts`: guarda el tiempo restante y el
+  `Date.now()` del último inicio, y calcula lo que queda. Un intervalo de 250 ms solo refresca la
+  pantalla. Por eso el tiempo sigue corriendo y es exacto aunque la app pase a segundo plano o
+  se bloquee el teléfono.
+- Los tiempos iniciales salen de `currentTime` de cada jugador en cuanto el timer está en el store.
+- Modo normal: cada jugador tiene iniciar/pausar y reiniciar. Al llegar a 0 se detiene, su botón
+  vuelve a play y suena `#time_over`.
+- Modo Continuous: play arranca al jugador actual o, si no tiene tiempo, al siguiente con tiempo;
+  "siguiente" pausa al que corre y arranca al siguiente con tiempo (se salta a los que están en 0);
+  pausa detiene al que corre; si nadie tiene tiempo, todo queda detenido. El turno no pasa solo
+  al llegar a 0.
+- Alarma: si un jugador llega a 0 con la app en segundo plano, suena una vez al volver. Si el
+  navegador bloquea el audio, no hay error; la pantalla muestra `0 : 00`.
+- Pantalla encendida: `composables/useWakeLock.ts` pide la Wake Lock API al abrir la pantalla del
+  timer (corra o esté en pausa), la vuelve a pedir al regresar a la app y la libera al salir.
+  Funciona en Chrome Android e iOS 16.4 o posterior; en navegadores sin soporte no hace nada.
+- Si `/timer-app/N` no tiene timer una vez comprobada la sesión (invitado que recargó, enlace
+  viejo, índice inválido), se muestra "Timer not found" con un botón a la lista.
 - Con sesión, cada 5 s `syncTimeValues` guarda el `currentTime` de cada jugador en Firestore.
 
 ## Modelo de datos (Firestore)

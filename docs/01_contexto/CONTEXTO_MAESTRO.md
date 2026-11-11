@@ -51,5 +51,8 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 01, corregir el editor de timers (`specs/01-editor-de-timers.md`): tiempo común como
   invitado, "−" quita al último, de 1 a 12 jugadores, validación del modal y confirmación al
   borrar. Implementada y fusionada en `master` (PR #3, 2026-11-11).
-- Siguientes, según la revisión QA del 2026-11-11: spec 02 (reloj fiable en `TimerApp.vue`),
-  spec 03 (pruebas automáticas) y spec 04 (Firebase y producción).
+- SPEC 02, reloj fiable y pantalla encendida (`specs/02-reloj-fiable.md`): tiempo con
+  `Date.now()`, Wake Lock en la pantalla del timer, alarma al volver, Continuous sin trabas y
+  "Timer not found". En PR desde la rama `spec-02-reloj-fiable`.
+- Siguientes, según la revisión QA del 2026-11-11: spec 03 (pruebas automáticas) y spec 04
+  (Firebase y producción). Actualizar Node y dependencias va en su propio hilo.
