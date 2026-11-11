@@ -11,12 +11,14 @@ export default defineNuxtConfig({
                 { name: 'msapplication-TileColor', content: '#ffffff'},
                 { name: 'theme-color', content: '#ffffff'}
             ],
+            // Los archivos de public/ se sirven bajo baseURL, y head.link no le agrega el prefijo:
+            // sin /gameboard-timer/ dan 404 en GitHub Pages.
             link: [
-                {rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png'},
-                {rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png'},
-                {rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png'},
-                {rel: 'manifest', href: '/site.webmanifest'},
-                {rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#1D1D1B'},
+                {rel: 'apple-touch-icon', sizes: '180x180', href: '/gameboard-timer/apple-touch-icon.png'},
+                {rel: 'icon', sizes: '32x32', href: '/gameboard-timer/favicon-32x32.png'},
+                {rel: 'icon', sizes: '16x16', href: '/gameboard-timer/favicon-16x16.png'},
+                {rel: 'manifest', href: '/gameboard-timer/site.webmanifest'},
+                {rel: 'mask-icon', href: '/gameboard-timer/safari-pinned-tab.svg', color: '#1D1D1B'},
                 {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0'}
             ],
             bodyAttrs: {

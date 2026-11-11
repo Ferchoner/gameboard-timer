@@ -1,7 +1,7 @@
 import { test as base, expect } from '@playwright/test'
 
-// Errores de consola que no vienen de la app: recursos que no cargan (favicons de la futura
-// spec 04, Firebase sin red). Cualquier otro error de consola o excepción hace fallar la prueba.
+// Errores de consola que no vienen de la app: recursos que no cargan (Firebase o Google Fonts sin
+// red). Cualquier otro error de consola o excepción hace fallar la prueba.
 const IGNORED_CONSOLE = [/^Failed to load resource/]
 
 export const test = base.extend({
