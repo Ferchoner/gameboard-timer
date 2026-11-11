@@ -1,6 +1,6 @@
 # SPEC 06 — Aviso al invitado, nombres largos, accesibilidad e iconos propios
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 01 (editor) y SPEC 04 (último cambio a los componentes de sesión)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Cerrar los ajustes pequeños de la revisión QA: avisar al invitado antes de que pierda sus timers, que los nombres largos no rompan la pantalla del timer, que los controles tengan nombre accesible y que los iconos se vean sin depender de Google Fonts.
