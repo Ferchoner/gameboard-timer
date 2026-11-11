@@ -1,6 +1,6 @@
 # SPEC 02 — Reloj fiable y pantalla encendida en móviles
 
-> **Estado:** Borrador
+> **Estado:** Implementado
 > **Depende de:** SPEC 01
 > **Fecha:** 2026-11-11
 > **Objetivo:** Que el reloj de cada jugador marque el tiempo real aunque el móvil cambie de app o se bloquee, y que la pantalla no se apague mientras el timer está abierto.

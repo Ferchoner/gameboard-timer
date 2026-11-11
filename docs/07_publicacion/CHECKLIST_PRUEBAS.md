@@ -27,9 +27,18 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 
 ### Timer en marcha
 - [ ] Modo normal: iniciar, pausar y reiniciar cada jugador por separado.
+- [ ] Modo normal: al llegar a 0 el botón del jugador vuelve a play.
 - [ ] Modo Continuous: iniciar, "siguiente" pasa al jugador siguiente y vuelve al primero.
+- [ ] Modo Continuous: "siguiente" se salta a los jugadores en 0; pausa detiene siempre al que corre.
+- [ ] Modo Continuous: con todos en 0, ningún reloj corre y el control vuelve a play.
 - [ ] Pausar y reiniciar todo en modo Continuous.
 - [ ] Al llegar a 0 suena la alerta.
+- [ ] Tras 60 s reales con el reloj corriendo, el display marca 60 s menos (±1 s).
+- [ ] Móvil: cambiar de app o bloquear la pantalla 60 s y volver muestra 60 s menos (±1 s).
+- [ ] Móvil: si el tiempo se acaba con la app en segundo plano, la alarma suena al volver.
+- [ ] Móvil (Chrome Android, iOS 16.4+): la pantalla no se apaga con el timer abierto, corra o
+  esté en pausa; al salir del timer vuelve a apagarse con normalidad.
+- [ ] Recargar `/timer-app/0` como invitado muestra "Timer not found" y el botón lleva a la lista.
 - [ ] Botones de inicio y atrás del header oscuro.
 - [ ] Distribución correcta con 2, 3, 4 y más jugadores.
 
@@ -44,3 +53,15 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 ### Rutas en producción
 - [ ] Navegar entre `/`, `/timers`, `/timer-app/0` y `/user/signup-form` bajo `/gameboard-timer/`.
 - [ ] Recargar en `/timers` y `/user/signup-form` no da 404.
+
+## Probar en el móvil desde la compu
+
+El Wake Lock solo funciona con HTTPS (o `localhost`). Con Nuxt 3.6 en dev:
+
+```
+NODE_TLS_REJECT_UNAUTHORIZED=0 npx nuxi dev --host <IP de la compu> --https
+```
+
+Abrir `https://<IP>:3000/gameboard-timer/` en el teléfono, en la misma red, y aceptar el aviso del
+certificado autofirmado. `--host 0.0.0.0` no sirve: el servidor no puede pedirse su propio
+manifest. La variable `NODE_TLS_REJECT_UNAUTHORIZED=0` es solo para esta sesión de desarrollo.
