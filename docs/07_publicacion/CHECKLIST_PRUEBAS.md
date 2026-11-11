@@ -19,6 +19,7 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 | Editor como invitado | `npm run test:e2e` (`editor.spec.js`): crear, tiempo común y reinicio, "+" y "−", límites, validaciones con "Update Timer" y la X, confirmación al borrar, borrar el último timer editado |
 | Timer en marcha | `npm run test:e2e` (`reloj.spec.js`), con reloj y visibilidad simulados: modo normal, Continuous con jugadores en 0, todos en 0, alarma al volver de segundo plano, Wake Lock al entrar y salir |
 | Rutas en producción | `npm run test:e2e` (`rutas.spec.js`): recargar `/timers` y `/user/signup-form`, "Timer not found" en `/timer-app/0` y `/timer-app/abc` |
+| Favicons y loading | `npm run test:e2e` (`produccion.spec.js`): favicons, manifest y sus iconos responden 200 bajo `/gameboard-timer/`; si Firebase no responde en 15 s, el loading muestra el aviso con "Reload" |
 
 Las E2E corren como invitado, en Chromium de escritorio y en un Pixel 7 emulado, contra el build de
 producción servido bajo `/gameboard-timer/` (`tests/e2e/serve.mjs` imita GitHub Pages, con su
@@ -77,6 +78,8 @@ visual (distribución de jugadores, header).
 ### Rutas en producción
 - [ ] Navegar entre `/`, `/timers`, `/timer-app/0` y `/user/signup-form` bajo `/gameboard-timer/`.
 - [ ] Recargar en `/timers` y `/user/signup-form` no da 404.
+- [ ] En `https://ferchoner.github.io/gameboard-timer/` se ve el favicon en la pestaña, y "Agregar a
+  pantalla de inicio" en el móvil usa el icono de la app.
 
 ## Probar en el móvil desde la compu
 

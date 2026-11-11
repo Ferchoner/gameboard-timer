@@ -18,16 +18,19 @@ const mainStore = useMainStore();
     </div>
     <FooterComponent v-if="!isTA" />
     <SaveErrorToast />
-    <is-loading-component v-if="isLoadingData || !userStore.usrChecked" />
+    <is-loading-component v-if="isLoadingData || !userStore.usrChecked" :failed="loadingFailed" />
   </div>
 </template>
 
 <script>
+const LOADING_TIMEOUT_MS = 15000;
+
 export default {
   name: "app",
   data() {
     return {
-      isLoadingData: true
+      isLoadingData: true,
+      loadingFailed: false
     }
   },
   computed: {
@@ -36,6 +39,13 @@ export default {
     }
   },
   mounted() {
+    // Si Firebase no responde, el loading no debe quedarse para siempre sin explicación
+    setTimeout(() => {
+      const userStore = useUserStore();
+      if (this.isLoadingData || !userStore.usrChecked) {
+        this.loadingFailed = true;
+      }
+    }, LOADING_TIMEOUT_MS);
     const mainC = document.querySelector('.the-container')
     if (mainC) {
       mainC.dispatchEvent(new Event('click'))

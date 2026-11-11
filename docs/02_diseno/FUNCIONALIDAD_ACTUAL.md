@@ -28,7 +28,9 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
    `timers: []`; si tiene `accessToken` (cuentas viejas), lo borra. Los timers que ya no existen se
    ignoran. Si la lectura falla, la sesión queda sin comprobar y el loading avisa a los 15 s.
 3. Si no hay usuario, deja el usuario vacío (invitado) y vacía los timers.
-4. Mientras `usrChecked` es `false` se muestra `IsLoadingComponent`.
+4. Mientras `usrChecked` es `false` se muestra `IsLoadingComponent`. Si a los 15 s sigue así
+   (Firebase no responde, o falla la lectura de `Users` sin conexión), muestra "Couldn't connect.
+   Check your connection and reload." y un botón "Reload".
 
 ### Login, registro y logout
 
