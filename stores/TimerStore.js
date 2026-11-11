@@ -26,6 +26,10 @@ export const useTimerStore = defineStore( 'TimerStore', {
         removeTimer(index) {
             const userStore = useUserStore();
             const deletedTimer = this.timers.splice(index, 1);
+            // El índice del modal nunca debe quedar fuera de la lista
+            if (this.index >= this.timers.length) {
+                this.index = Math.max(this.timers.length - 1, 0);
+            }
             if (userStore.user.uid && userStore.usrChecked) { // User exists in Firesore
                 this.syncTimers(index, userStore, deletedTimer[0]);
             }
