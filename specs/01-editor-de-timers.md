@@ -1,6 +1,6 @@
 # SPEC 01 — Corregir el editor de timers
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** ninguna
 > **Fecha:** 2026-11-11
 > **Objetivo:** Que editar, quitar jugadores y borrar un timer funcione igual como invitado y con cuenta, sin perder datos ni romper la página.
