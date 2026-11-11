@@ -70,7 +70,7 @@ Rama `spec-05-actualizar-dependencias`, creada desde `master` cuando ya estén f
 3. **Nuxt 4, Pinia 4 y faker 10.** Actualizar `nuxt`, `@nuxt/devtools`, `pinia`, `@pinia/nuxt` y `@faker-js/faker`. Revisar que `pinia.autoImports` de `nuxt.config.ts` siga siendo válido en `@pinia/nuxt` 1.x y que `faker.string.alphanumeric`, `faker.person.firstName`, `faker.person.fullName` y `faker.color.rgb` existan. Prueba: build sin errores; `npm run dev`, crear un timer como invitado, jugarlo y borrarlo.
 4. **Firebase 13.** Actualizar `firebase` y cambiar a `import type` los tipos de `useFirebaseAuth.ts` y `useFirestore.ts`. Prueba: build sin errores; con cuenta, iniciar sesión, crear, editar y borrar un timer, recargar y comprobar que los datos siguen en Firestore.
 5. **Bootstrap, sass y `@types/node`.** Actualizar `bootstrap` y `sass`; quitar `@types/node` si no hace falta. Prueba: build sin errores; el modal de timers abre y cierra y los estilos se ven igual que en producción.
-6. **CI y deploy con `npm ci`.** Cambiar `npm install` por `npm ci` en `ci.yml` y `main.yml`, quitar el comentario sobre el lockfile roto y actualizar las acciones obsoletas de `main.yml`. Prueba: la CI del PR pasa en verde.
+6. **CI y deploy con `npm ci`.** Cambiar `npm install` por `npm ci` en `ci.yml` y `main.yml`, quitar el comentario sobre el lockfile roto y actualizar las acciones obsoletas de `main.yml`. Prueba: la CI del PR pasa en verde, incluidas las pruebas automáticas de la spec 03.
 7. **Documentación.** Actualizar `CLAUDE.md`, `CONTEXTO_MAESTRO.md` (quitar el pendiente de Node y del lockfile y registrar las decisiones), `PUBLICACION_GITHUB_PAGES.md` y `README.md`.
 
 ## Criterios de aceptación
@@ -82,6 +82,7 @@ Rama `spec-05-actualizar-dependencias`, creada desde `master` cuando ya estén f
 - [ ] `npm ls nuxt pinia firebase` muestra Nuxt 4.x, Pinia 4.x y Firebase 13.x.
 - [ ] `NITRO_PRESET=github-pages npm run build` termina sin errores y genera `.output/public`.
 - [ ] La CI del PR pasa en verde.
+- [ ] Las pruebas automáticas de la spec 03 pasan en verde con las versiones nuevas, en local y en la CI.
 - [ ] `app.baseURL`, `plugins/firebase.client.ts` y el modelo de Firestore no cambian.
 - [ ] La checklist manual de `docs/07_publicacion/CHECKLIST_PRUEBAS.md` pasa para "Invitado" y "Con cuenta", probada con `npm run dev` o `npm run preview`.
 - [ ] Tras el merge, el deploy de GitHub Pages termina bien y la app publicada carga, inicia sesión y muestra los timers guardados.
