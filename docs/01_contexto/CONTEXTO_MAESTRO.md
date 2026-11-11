@@ -35,7 +35,9 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 
 ## Pendientes
 
-- Actualizar Node (el deploy usa Node 18, fuera de soporte) y dependencias. Spec aparte.
+- Actualizar Node (el deploy usa Node 18, fuera de soporte) y dependencias. Definido en
+  `specs/05-actualizar-dependencias.md` (Node 24, Nuxt 4, Firebase 13, solo npm); se aplica
+  después de las specs 02 y 03 y antes de la 04.
 - `package-lock.json` desincronizado con `package.json` (`npm ci` falla; falta
   `@faker-js/faker`). Hay además un `yarn.lock`. Decidir un solo gestor de paquetes.
 - `@nuxt/devtools` está en `latest`; conviene fijar la versión.
