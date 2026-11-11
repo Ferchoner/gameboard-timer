@@ -1,12 +1,12 @@
 <template>
   <div class="d-flex fixed-top light-header justify-content-between px-2">
-    <button class="btn btn-link text-white p-0 m-1" @click="toHome">
-      <span class="material-symbols-outlined cursor-pointer">
+    <button class="btn btn-link text-white p-0 m-1" aria-label="Home" @click="toHome">
+      <span class="material-symbols-outlined cursor-pointer" aria-hidden="true">
         home
       </span>
     </button>
-    <button class="btn btn-link text-white p-0 m-1" @click="$router.back()">
-      <span class="material-symbols-outlined cursor-pointer">
+    <button class="btn btn-link text-white p-0 m-1" aria-label="Back" @click="$router.back()">
+      <span class="material-symbols-outlined cursor-pointer" aria-hidden="true">
         cancel
       </span>
     </button>

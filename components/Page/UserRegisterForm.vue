@@ -16,20 +16,20 @@ useHead({
             <span> {{ formMessages }} </span>
           </div>
           <div class="form-floating">
-            <input type="text" class="form-control firstname" name="firstname" placeholder="Jhon" v-model="user.firstName" required>
-            <label for="firstname">First Name</label>
+            <input type="text" id="register-firstname" class="form-control firstname" name="firstname" placeholder="Jhon" v-model="user.firstName" required>
+            <label for="register-firstname">First Name</label>
           </div>
           <div class="form-floating">
-            <input type="text" class="form-control lastname" name="lastname" placeholder="Doe" v-model="user.lastName" required>
-            <label for="lastname">Last Name</label>
+            <input type="text" id="register-lastname" class="form-control lastname" name="lastname" placeholder="Doe" v-model="user.lastName" required>
+            <label for="register-lastname">Last Name</label>
           </div>
           <div class="form-floating">
-            <input type="email" class="form-control email"  name="email" placeholder="name@example.com" v-model="user.email" required>
-            <label for="email">Email address</label>
+            <input type="email" id="register-email" class="form-control email"  name="email" placeholder="name@example.com" v-model="user.email" required>
+            <label for="register-email">Email address</label>
           </div>
           <div class="form-floating">
-            <input type="password" class="form-control password" placeholder="Password" v-model="user.password" required>
-            <label for="password">Password</label>
+            <input type="password" id="register-password" class="form-control password" placeholder="Password" v-model="user.password" required>
+            <label for="register-password">Password</label>
           </div>
           <button class="btn btn-primary mt-2" type="submit">Sign In</button>
         </form>

@@ -9,14 +9,14 @@ const timerStore = useTimerStore();
       <div class="d-flex justify-content-between align-items-center px-2">
         <strong class="text-gray-dark">{{ (timer.title.length > 13 ? `${timer.title.slice(0, 13)}...` : timer.title) + ` (${timerStore.playersCount[timerIndex]} players)` }}</strong>
         <div class="action-buttons">
-          <button class="btn btn-sm btn-success me-2" @click="navigateTo(`/timer-app/${timerIndex}`)">
-            <span class="material-symbols-outlined">play_circle</span>
+          <button class="btn btn-sm btn-success me-2" :aria-label="`Play ${timer.title}`" @click="navigateTo(`/timer-app/${timerIndex}`)">
+            <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
           </button>
-          <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#timer-form-backdrop" @click="timerStore.index = timerIndex">
-            <span class="material-symbols-outlined">edit</span>
+          <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#timer-form-backdrop" :aria-label="`Edit ${timer.title}`" @click="timerStore.index = timerIndex">
+            <span class="material-symbols-outlined" aria-hidden="true">edit</span>
           </button>
-          <button class="btn btn-sm btn-danger" @click="confirmRemove(timerStore)">
-            <span class="material-symbols-outlined">delete</span>
+          <button class="btn btn-sm btn-danger" :aria-label="`Delete ${timer.title}`" @click="confirmRemove(timerStore)">
+            <span class="material-symbols-outlined" aria-hidden="true">delete</span>
           </button>
         </div>
       </div>

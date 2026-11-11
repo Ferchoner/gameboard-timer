@@ -5,12 +5,12 @@
         <span> {{ formMessages }} </span>
       </div>
       <div class="form-floating">
-        <input type="email" class="form-control email" placeholder="name@example.com" v-model="creds.email" required>
-        <label for="floatingInput">Email address</label>
+        <input type="email" id="login-email" class="form-control email" placeholder="name@example.com" v-model="creds.email" required>
+        <label for="login-email">Email address</label>
       </div>
       <div class="form-floating">
-        <input type="password" class="form-control password" placeholder="Password" v-model="creds.password" required>
-        <label for="floatingPassword">Password</label>
+        <input type="password" id="login-password" class="form-control password" placeholder="Password" v-model="creds.password" required>
+        <label for="login-password">Password</label>
       </div>
       <button class="btn btn-primary mt-2" type="submit">Login</button>
     </form>
