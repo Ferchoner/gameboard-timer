@@ -41,6 +41,7 @@ useHead({
 
 <script>
 import IsLoadingComponent from "./../IsLoadingComponent";
+import { authErrorMessage, MIN_PASSWORD_LENGTH } from '~/utils/authErrors';
 
 export default {
   name: "UserRegisterForm",
@@ -61,6 +62,12 @@ export default {
   methods: {
     register(userStore) {
       if(!this.isLoading) {
+        if (this.user.password.length < MIN_PASSWORD_LENGTH) {
+          // Se valida antes de llamar a Firebase
+          this.hasErrors = true;
+          this.formMessages = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+          return;
+        }
         this.hasErrors = false;
         this.isLoading = true;
         userStore.register(this.user)
@@ -69,13 +76,13 @@ export default {
                 navigateTo('/');
               } else {
                 this.hasErrors = true;
-                this.formMessages = response.message.split(':')[1];
+                this.formMessages = authErrorMessage(response);
               }
               this.isLoading = false;
             })
             .catch((error) => {
               this.hasErrors = true;
-              this.formMessages = error.message.split(':')[1];
+              this.formMessages = authErrorMessage(error);
               this.isLoading = false;
             });
       }
