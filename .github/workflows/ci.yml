@@ -14,7 +14,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "18" # misma versión que el deploy (main.yml)
+          node-version: "24" # misma versión que el deploy (main.yml)
 
       # npm install y no npm ci: package-lock.json no está sincronizado (ver pendientes)
       - name: Instalar dependencias
