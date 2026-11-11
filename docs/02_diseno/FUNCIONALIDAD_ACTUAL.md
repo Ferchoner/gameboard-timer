@@ -38,9 +38,17 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 
 - "+" crea un timer "New Timer" con 2 jugadores aleatorios (nombre y color con faker).
 - Cada fila tiene: jugar (va a `/timer-app/{índice}`), editar (abre `TimerModal`) y borrar.
+  Borrar pide confirmación (`window.confirm`); al borrar, `TimerStore.index` se ajusta para no
+  quedar fuera de la lista.
 - `TimerModal` edita título, número de jugadores (+/−), modo Continuous, tiempo (10–120 min,
-  slider sobre `players[0].timeValue`) y nombre y color de cada jugador. Guardar o cerrar llama a
-  `syncTimer`.
+  slider sobre `players[0].timeValue`, guardado como número) y nombre y color de cada jugador.
+- Jugadores: de 1 a 12 (`MIN_PLAYERS` y `MAX_PLAYERS` en `TimerStore.js`). "+" agrega un jugador
+  con el tiempo actual del timer; "−" quita al último. Cada botón se desactiva en su límite.
+- Guardar ("Update Timer", la X o Enter) valida que el título y los nombres no estén vacíos. Con
+  errores no guarda, el modal sigue abierto y muestra `Title is required` o
+  `Player N needs a name`. Sin errores llama a `syncTimer` y cierra el modal.
+- Todos los jugadores comparten el tiempo del primero, como invitado y con cuenta
+  (`applySharedTime`).
 
 ### Timer en marcha (`components/Page/TimerApp.vue`)
 
@@ -90,8 +98,8 @@ Escrituras (`stores/TimerStore.js`):
 
 - `addTimer` → `setDocument('Timers', FSid)` y agrega la referencia a `Users/{uid}.timers`.
 - `removeTimer` → `deleteDocument('Timers', FSid)` y quita la referencia por índice.
-- `syncTimer` → `updateDocument` del timer completo; iguala `timeValue` y `currentTime` de
-  todos los jugadores al del primero.
+- `syncTimer` → iguala siempre `timeValue` y `currentTime` de todos los jugadores al del primero
+  (`applySharedTime`, como número) y, con sesión, hace `updateDocument` del timer completo.
 - `syncTimeValues` → `updateDocument` solo de `players` con el `currentTime` actual.
 
 Las clases `Timer` y `Player` (en `TimerStore.js`) definen los valores por defecto.

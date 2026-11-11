@@ -48,4 +48,8 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 
 Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 
-- (vacía por ahora)
+- SPEC 01, corregir el editor de timers (`specs/01-editor-de-timers.md`): tiempo común como
+  invitado, "−" quita al último, de 1 a 12 jugadores, validación del modal y confirmación al
+  borrar. En PR desde la rama `spec-01-editor-de-timers`.
+- Siguientes, según la revisión QA del 2026-11-11: spec 02 (reloj fiable en `TimerApp.vue`),
+  spec 03 (pruebas automáticas) y spec 04 (Firebase y producción).

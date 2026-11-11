@@ -17,7 +17,13 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 - [ ] La app carga sin errores en consola y el loading desaparece.
 - [ ] "+" crea un timer con 2 jugadores.
 - [ ] Editar: cambiar título, sumar y quitar jugadores, nombre, color, tiempo y Continuous.
-- [ ] Borrar un timer lo quita de la lista.
+- [ ] Borrar un timer pide confirmación; al cancelar sigue en la lista y al aceptar se quita.
+- [ ] Con el slider en un tiempo distinto de 25, todos los jugadores arrancan con ese tiempo y
+  "reiniciar" vuelve a él.
+- [ ] "+" agrega un jugador con el tiempo actual; "−" quita al último y conserva el tiempo.
+- [ ] Con 1 jugador "−" está desactivado; con 12, "+" está desactivado.
+- [ ] Título o nombre vacío: ni "Update Timer" ni la X cierran el modal, y se ve el mensaje.
+- [ ] Editar el último timer de la lista, guardarlo y borrarlo no deja errores en consola.
 
 ### Timer en marcha
 - [ ] Modo normal: iniciar, pausar y reiniciar cada jugador por separado.
@@ -32,6 +38,8 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 - [ ] Login y logout.
 - [ ] Un timer creado con sesión sigue ahí al recargar.
 - [ ] Editar y borrar con sesión se refleja al recargar.
+- [ ] Al cambiar el tiempo, Firestore guarda `timeValue` y `currentTime` como número en todos
+  los jugadores.
 
 ### Rutas en producción
 - [ ] Navegar entre `/`, `/timers`, `/timer-app/0` y `/user/signup-form` bajo `/gameboard-timer/`.
