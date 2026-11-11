@@ -12,20 +12,21 @@
     "test": "npm run test:unit && npm run test:e2e"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "@playwright/test": "1.61.1",
-    "@sidebase/nuxt-session": "^0.2.7",
-    "@types/node": "^18.17.1",
-    "nuxt": "^3.6.5",
-    "vitest": "3.2.7"
+    "@nuxt/devtools": "^4.1.0",
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^24.0.0",
+    "nuxt": "^4.6.4",
+    "vitest": "^5.1.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.0.2",
-    "@nuxtjs/robots": "^3.0.0",
-    "@pinia/nuxt": "^0.4.11",
-    "bootstrap": "^5.3.1",
-    "firebase": "^10.1.0",
-    "pinia": "^2.1.6",
-    "sass": "^1.64.2"
+    "@faker-js/faker": "^10.6.0",
+    "@pinia/nuxt": "^1.0.3",
+    "bootstrap": "^5.3.8",
+    "firebase": "^13.2.0",
+    "pinia": "^4.1.0",
+    "sass": "^1.108.2"
+  },
+  "engines": {
+    "node": ">=24.12.0"
   }
 }

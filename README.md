@@ -1,6 +1,7 @@
-# Nuxt 3 Minimal Starter
+# Timer for Friends
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Hecha con [Nuxt 4](https://nuxt.com/docs/getting-started/introduction). Requiere Node 24 (`.nvmrc`)
+y npm.
 
 This project was created with Vue and Nuxt, please check Nuxt and Vue documentation to use it
 
@@ -16,7 +17,7 @@ This is a simple timer for gameboard gamers, i hope you can enjoy it!
 ## Pruebas
 
 ```
-npm install
+npm ci
 npm run test:unit                          # unitarias
 npx playwright install chromium            # solo la primera vez
 NITRO_PRESET=github-pages npm run build    # las E2E corren contra el build

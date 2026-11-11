@@ -10,7 +10,12 @@ const mainStore = useMainStore();
   <div :class="'the-container d-flex flex-column' + (isTA ? ' black-bg' : '')" @click.once="() => restoreSessionData(userStore, mainStore)">
     <HeaderComponent v-if="!isTA" />
     <LightHeader v-if="isTA" />
-    <NuxtPage />
+    <!-- Contenedor fijo para la página: con Nuxt 4, los v-if de header y footer junto a la
+         transición de página rompían la navegación (insertBefore). display: contents no cambia
+         el layout. -->
+    <div class="page-wrapper">
+      <NuxtPage />
+    </div>
     <FooterComponent v-if="!isTA" />
     <is-loading-component v-if="isLoadingData || !userStore.usrChecked" />
   </div>
@@ -50,6 +55,9 @@ export default {
 </script>
 
 <style lang="scss">
+.page-wrapper {
+  display: contents;
+}
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,

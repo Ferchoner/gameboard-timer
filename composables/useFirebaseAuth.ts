@@ -1,4 +1,5 @@
-import { updateProfile, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, UserCredential, NextOrObserver, User} from 'firebase/auth'
+import { updateProfile, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth'
+import type { UserCredential, NextOrObserver, User } from 'firebase/auth'
 
 export default function() {
     const { $auth } = useNuxtApp()

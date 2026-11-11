@@ -70,7 +70,7 @@ visual (distribución de jugadores, header).
 
 ## Probar en el móvil desde la compu
 
-El Wake Lock solo funciona con HTTPS (o `localhost`). Con Nuxt 3.6 en dev:
+El Wake Lock solo funciona con HTTPS (o `localhost`). En dev:
 
 ```
 NODE_TLS_REJECT_UNAUTHORIZED=0 npx nuxi dev --host <IP de la compu> --https

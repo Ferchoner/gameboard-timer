@@ -4,8 +4,10 @@
 
 - Workflow: `.github/workflows/main.yml` ("Deploy to GitHub Pages").
 - Se dispara con cada **push a `master`** y a mano (`workflow_dispatch`).
-- Pasos: Node 18, `npm install`, `npm run build` con `NITRO_PRESET=github-pages`, sube
-  `.output/public` y lo publica con `actions/deploy-pages`.
+- Pasos: Node 24, `npm ci`, `npm run build` con `NITRO_PRESET=github-pages`, sube
+  `.output/public` con `actions/upload-pages-artifact` y lo publica con `actions/deploy-pages`.
+- Las acciones de GitHub deben estar en versiones vigentes: entre la spec 01 y la 05 el deploy
+  falló siempre porque `upload-pages-artifact@v1` usaba `upload-artifact@v3`, que GitHub retiró.
 - La app vive en `https://ferchoner.github.io/gameboard-timer/`, por eso
   `nuxt.config.ts` tiene `app.baseURL: '/gameboard-timer/'`.
 
@@ -17,7 +19,7 @@
 ## Probar el build como en producción
 
 ```bash
-npm install
+npm ci
 NITRO_PRESET=github-pages npm run build   # genera .output/public
 npm run preview                          # sirve el build localmente
 ```

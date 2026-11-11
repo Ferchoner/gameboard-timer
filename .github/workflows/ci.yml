@@ -10,15 +10,14 @@ jobs:
     name: Build y pruebas
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: "18" # misma versión que el deploy (main.yml)
+          node-version: "24" # misma versión que el deploy (main.yml)
 
-      # npm install y no npm ci: package-lock.json no está sincronizado (ver pendientes)
       - name: Instalar dependencias
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run build
@@ -37,7 +36,7 @@ jobs:
 
       - name: Subir reporte de Playwright
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: playwright-report

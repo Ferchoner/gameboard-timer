@@ -5,7 +5,7 @@
 ## Identidad y objetivo
 
 App web de temporizadores para jugadores de juegos de mesa ("Timer for Friends", repo
-`Ferchoner/gameboard-timer`). Hecha con Nuxt 3, Pinia, Bootstrap 5 y Firebase. Publicada en
+`Ferchoner/gameboard-timer`). Hecha con Nuxt 4, Pinia, Bootstrap 5 y Firebase. Publicada en
 GitHub Pages bajo la ruta `/gameboard-timer/`. Desarrollada en agosto de 2023 y considerada
 terminada; ahora entra en una etapa de mejoras y ajustes.
 
@@ -31,17 +31,14 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
   (Fernando, 2026-11-11).
 - CI de build en cada PR (`.github/workflows/ci.yml`) (Fernando, 2026-11-11). Desde la spec 03
   corre también las pruebas unitarias y E2E (Fernando, 2026-11-11).
-- La actualización de Node 18 y de dependencias va en una spec aparte, no ahora
-  (Fernando, 2026-11-11).
+- Node 24, Nuxt 4, Firebase 13 y solo npm con `npm ci` en CI y deploy; se quitan
+  `@sidebase/nuxt-session` y `@nuxtjs/robots`; las carpetas no se mueven a `app/` (spec 05,
+  Fernando, 2026-11-11).
 
 ## Pendientes
 
-- Actualizar Node (el deploy usa Node 18, fuera de soporte) y dependencias. Definido en
-  `specs/05-actualizar-dependencias.md` (Node 24, Nuxt 4, Firebase 13, solo npm); se aplica
-  después de las specs 02 y 03 y antes de la 04.
-- `package-lock.json` desincronizado con `package.json` (`npm ci` falla; falta
-  `@faker-js/faker`). Hay además un `yarn.lock`. Decidir un solo gestor de paquetes.
-- `@nuxt/devtools` está en `latest`; conviene fijar la versión.
+- Avisos de deprecación de Sass en el build (vienen de Bootstrap 5 con `@import`). No rompen
+  nada; corregirlos es otra spec.
 - Las pruebas automáticas (spec 03) solo cubren el modo invitado. Probar con cuenta requiere el
   emulador de Firebase, que toca `plugins/firebase.client.ts`: spec aparte.
 - Origen y licencia de `time_over.mp3` y de `clock_logo.png`: desconocidos (ver
@@ -64,3 +61,7 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 03, pruebas automáticas (`specs/03-pruebas-automaticas.md`): Vitest para `useCountdown` y
   `TimerStore`, Playwright para editor, reloj y rutas como invitado, y ambas en la CI. Implementada
   (PR #9).
+- SPEC 05, actualizar Node y dependencias (`specs/05-actualizar-dependencias.md`): Node 24,
+  Nuxt 4, Pinia 4, Firebase 13, faker 10, Vitest 5 y Playwright 1.65, solo npm con `npm ci`, y
+  acciones de GitHub al día (el deploy fallaba desde antes por `upload-artifact@v3`). Implementada
+  (PR #10).
