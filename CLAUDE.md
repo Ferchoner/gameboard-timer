@@ -15,7 +15,7 @@ GitHub Pages; el trabajo actual es de **mejoras y ajustes**.
 
 Nuxt 4 (Vue 3) + Pinia + Bootstrap 5 + SCSS + Firebase 13 (Auth, Firestore, Analytics), con Node 24
 (`.nvmrc`). Gestor de paquetes: solo npm.
-Iconos: Material Symbols (Google Fonts). Git/GitHub, deploy con GitHub Actions a GitHub Pages.
+Iconos: Material Symbols, subconjunto servido desde `assets/fonts/` (ver `RECURSOS_Y_LICENCIAS.md`). Git/GitHub, deploy con GitHub Actions a GitHub Pages.
 
 ## Fuente de verdad (leer antes de trabajar)
 
@@ -53,7 +53,7 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
   `Timer` y `Player`), `UserStore.js` (sesión y usuario), `MainStore.js` (Firebase listo).
 - `composables/` — `useFirebaseAuth.ts` y `useFirestore.ts`, envoltorios finos sobre Firebase.
 - `plugins/` — `firebase.client.ts` (inicializa Firebase) y `useBootstrap.client.ts`.
-- `assets/` — `css/master.scss`, `audio/time_over.mp3`, `images/`. `public/` — favicons y manifest.
+- `assets/` — `css/master.scss` (importa `_icons.scss`), `audio/time_over.mp3`, `images/`, `fonts/`. `public/` — favicons y manifest.
 
 ## Forma de trabajar
 
@@ -76,8 +76,8 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - `npm run build` — build de producción. Con `NITRO_PRESET=github-pages` genera `.output/public`,
   igual que el deploy.
 - `npm run preview` — servir el build localmente.
-- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `TimerStore`, `UserStore` y
-  `authErrors`).
+- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `TimerStore`, `UserStore`,
+  `authErrors` e `icons`).
 - `npm run test:e2e` — pruebas E2E con Playwright (`tests/e2e/`) contra el build de producción, en
   Chromium de escritorio y móvil emulado. Antes: `NITRO_PRESET=github-pages npm run build`. La
   primera vez: `npx playwright install chromium`.

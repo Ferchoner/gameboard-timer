@@ -73,4 +73,4 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   salieron en el PR #12, sin spec (Fernando, 2026-11-11).
 - SPEC 06, aviso al invitado, nombres largos, accesibilidad e iconos propios
   (`specs/06-pulido-accesibilidad.md`): cierra P1-5, P1-10, P2-8 y P2-9 de la revisión QA. Aprobada
-  (Fernando, 2026-11-11).
+  (Fernando, 2026-11-11); implementada en la rama `spec-06-pulido-accesibilidad`, en revisión.

@@ -45,11 +45,17 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 ### Timers (`components/Page/Timers.vue`, `TimerComponent.vue`, `TimerModal.vue`)
 
 - "+" crea un timer "New Timer" con 2 jugadores aleatorios (nombre y color con faker).
+- Como invitado con al menos un timer, la lista muestra el aviso "Guest mode: your timers are lost
+  if you reload or close this page. Sign up to keep them." (`GuestNotice.vue`), y recargar o
+  cerrar la página pide confirmación (`beforeunload` en `app.vue`; el texto lo pone el navegador).
+  Con sesión, o sin timers, no hay ni aviso ni confirmación.
 - Cada fila tiene: jugar (va a `/timer-app/{índice}`), editar (abre `TimerModal`) y borrar.
   Borrar pide confirmación (`window.confirm`); al borrar, `TimerStore.index` se ajusta para no
   quedar fuera de la lista.
 - `TimerModal` edita título, número de jugadores (+/−), modo Continuous, tiempo (10–120 min,
   slider sobre `players[0].timeValue`, guardado como número) y nombre y color de cada jugador.
+  El nombre admite hasta 20 caracteres (`MAX_NAME_LENGTH`); en la pantalla del timer, un nombre
+  que no cabe en su tarjeta se corta con "…" (también los más largos guardados antes).
 - Jugadores: de 1 a 12 (`MIN_PLAYERS` y `MAX_PLAYERS` en `TimerStore.js`). "+" agrega un jugador
   con el tiempo actual del timer; "−" quita al último. Cada botón se desactiva en su límite.
 - Guardar ("Update Timer", la X o Enter) valida que el título y los nombres no estén vacíos. Con
@@ -110,7 +116,7 @@ Proyecto Firebase `timer-42311`. **No cambiar sin una spec aprobada.**
   createdAt: Date,
   updateAt: Date,
   players: [
-    { name: 'Jack', color: 'rgb(…)', timeValue: 25, currentTime: 25 } // minutos
+    { name: 'Jack', color: '#a1b2c3', timeValue: 25, currentTime: 25 } // color en hex, tiempos en minutos
   ]
 }
 ```
