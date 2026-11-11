@@ -1,6 +1,6 @@
 # SPEC 05 — Actualizar Node y dependencias
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 01. Se implementa después de las specs 02 y 03 y antes de la 04 (aún sin escribir).
 > **Fecha:** 2026-11-11
 > **Objetivo:** Pasar la app a Node 24 y a las versiones actuales de sus dependencias, con un solo gestor de paquetes y un lockfile que permita `npm ci`.
