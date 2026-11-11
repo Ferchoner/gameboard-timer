@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { authErrorMessage } from '~/utils/authErrors'
 
 export default {
   name: "LoginFormComponent",
@@ -55,13 +56,13 @@ export default {
                 };
               } else {
                 this.hasErrors = true;
-                this.formMessages = response.message.split(':')[1];
+                this.formMessages = authErrorMessage(response);
                 this.isLoading = false;
               }
             })
             .catch((error) => {
               this.hasErrors = true;
-              this.formMessages = error.message.split(':')[1];
+              this.formMessages = authErrorMessage(error);
               this.isLoading = false;
             });
       }

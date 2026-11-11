@@ -39,11 +39,13 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 
 - **Seguridad de Firestore:** las reglas publicadas (consola, 2026-11-11) dejan a cualquier usuario
   con sesión leer, cambiar y borrar datos de todos (`allow read, write: if request.auth != null`).
-  Se corrige con la spec 04.
+  La spec 04 versiona en `firestore.rules` las reglas por dueño. Falta que Fernando las publique
+  en la consola después del merge.
 - Avisos de deprecación de Sass en el build (vienen de Bootstrap 5 con `@import`). No rompen
   nada; corregirlos es otra spec.
-- Las pruebas automáticas (spec 03) solo cubren el modo invitado. Probar con cuenta requiere el
-  emulador de Firebase, que toca `plugins/firebase.client.ts`: spec aparte.
+- Las E2E (spec 03) solo cubren el modo invitado. Las reglas se prueban con el emulador
+  (`npm run test:rules`, spec 04), pero probar la app con cuenta de punta a punta requiere que
+  apunte al emulador, lo que toca `plugins/firebase.client.ts`: spec aparte.
 - Origen y licencia de `time_over.mp3` y de `clock_logo.png`: desconocidos (ver
   `docs/03_recursos/RECURSOS_Y_LICENCIAS.md`).
 - La página "My Account" (`/user`) está vacía y su botón está oculto en el header.
@@ -70,5 +72,5 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   (PR #10).
 - SPEC 04, Firebase seguro y sin errores silenciosos (`specs/04-firebase-seguro.md`): reglas por
   dueño probadas con el emulador, sin `accessToken`, guardado solo con cambios, errores visibles y
-  login y registro robustos. En borrador. Favicons, manifest y timeout del loading van en un PR
-  aparte, sin spec (Fernando, 2026-11-11).
+  login y registro robustos. Aprobada (Fernando, 2026-11-11). Favicons, manifest y timeout del
+  loading van en un PR aparte, sin spec (Fernando, 2026-11-11).

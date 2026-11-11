@@ -142,6 +142,10 @@ onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange);
   clearInterval(synchronizer);
   synchronizer = null;
+  // Guarda los tiempos finales al salir (no escribe si no cambiaron)
+  if (timer.value) {
+    timerStore.syncTimeValues(timerIndex, players.value.map((_, i) => countdown.centisecondsNow(i)));
+  }
   countdown.dispose();
   wakeLock.release();
 });

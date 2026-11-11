@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// Reglas de Firestore de Timer for Friends (SPEC 04).
+// Cada usuario con sesión solo puede leer y escribir:
+// - su documento Users/{uid}
+// - los Timers cuyo id empieza con "{uid}-", el formato que usa la app (`${uid}-${5 caracteres}`)
+// Todo lo demás queda negado. Se publican a mano desde la consola de Firebase
+// (ver docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md) y se prueban con `npm run test:rules`.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /Users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /Timers/{timerId} {
+      allow read, write: if request.auth != null
+        && timerId.matches(request.auth.uid + '-[A-Za-z0-9]+');
+    }
+  }
+}

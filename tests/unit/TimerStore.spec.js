@@ -2,13 +2,16 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useTimerStore, Timer, Player, MIN_PLAYERS, MAX_PLAYERS } from '~/stores/TimerStore'
 import { useUserStore } from '~/stores/UserStore'
+import { useMainStore } from '~/stores/MainStore'
 
 // useFirestore es un auto-import de Nuxt: en Vitest se simula como global
 const firestore = {
     setDocument: vi.fn(async () => {}),
     updateDocument: vi.fn(async () => {}),
     deleteDocument: vi.fn(async () => {}),
-    docRef: vi.fn((collection, id) => ({ id }))
+    docRef: vi.fn((collection, id) => ({ id })),
+    addToArray: vi.fn((...values) => ({ add: values })),
+    removeFromArray: vi.fn((...values) => ({ remove: values }))
 }
 
 const login = () => {
@@ -42,6 +45,7 @@ describe('TimerStore', () => {
         setActivePinia(createPinia())
         vi.stubGlobal('useFirestore', () => firestore)
         Object.values(firestore).forEach(fn => fn.mockClear())
+        firestore.updateDocument.mockImplementation(async () => {})
         store = useTimerStore()
         store.addTimer('Catan', useUserStore())
     })
@@ -116,5 +120,58 @@ describe('TimerStore', () => {
         store.removeTimer(1)
         expect(firestore.setDocument).not.toHaveBeenCalled()
         expect(firestore.deleteDocument).not.toHaveBeenCalled()
+    })
+
+    // 2 jugadores de 25 minutos = 150000 centésimas cada uno
+    const FULL = 25 * 6000
+
+    it('syncTimeValues no escribe si los tiempos no cambiaron (timer en pausa)', async () => {
+        login()
+        store.timers[0].FSid = 'uid-test-abcde'
+        await store.syncTimeValues(0, [FULL, FULL])
+        expect(firestore.updateDocument).not.toHaveBeenCalled()
+    })
+
+    it('syncTimeValues escribe una vez por cambio y guarda currentTime en minutos', async () => {
+        login()
+        store.timers[0].FSid = 'uid-test-abcde'
+        await store.syncTimeValues(0, [FULL - 500, FULL])
+        await store.syncTimeValues(0, [FULL - 500, FULL])
+        expect(firestore.updateDocument).toHaveBeenCalledTimes(1)
+        const [, id, data] = firestore.updateDocument.mock.calls[0]
+        expect(id).toBe('uid-test-abcde')
+        expect(data.players.map(p => p.currentTime)).toEqual([(FULL - 500) / 6000, 25])
+
+        await store.syncTimeValues(0, [FULL - 1000, FULL])
+        expect(firestore.updateDocument).toHaveBeenCalledTimes(2)
+    })
+
+    it('syncTimeValues como invitado no llama a Firestore', async () => {
+        await store.syncTimeValues(0, [FULL - 500, FULL])
+        expect(firestore.updateDocument).not.toHaveBeenCalled()
+    })
+
+    it('borrar un timer con sesión quita su referencia por id, no por posición', async () => {
+        const userStore = login()
+        store.timers[0].FSid = 'uid-test-bbbbb'
+        userStore.user.timers = [{ id: 'uid-test-aaaaa' }, { id: 'uid-test-bbbbb' }]
+        store.removeTimer(0)
+        await vi.waitFor(() => expect(firestore.updateDocument).toHaveBeenCalled())
+        expect(firestore.deleteDocument).toHaveBeenCalledWith('Timers', 'uid-test-bbbbb')
+        const [collection, uid, data] = firestore.updateDocument.mock.calls[0]
+        expect([collection, uid]).toEqual(['Users', 'uid-test'])
+        expect(data.timers).toEqual({ remove: [{ id: 'uid-test-bbbbb' }] })
+        expect(userStore.user.timers).toEqual([{ id: 'uid-test-aaaaa' }])
+    })
+
+    it('si una escritura falla, avisa con saveError y no lanza el error', async () => {
+        login()
+        vi.spyOn(console, 'warn').mockImplementation(() => {})
+        firestore.updateDocument.mockImplementation(async () => { throw new Error('permission-denied') })
+        store.timers[0].FSid = 'uid-test-abcde'
+        await expect(store.syncTimer(0)).resolves.toBeNull()
+        expect(useMainStore().saveError).toBe(true)
+        useMainStore().dismissSaveError()
+        expect(useMainStore().saveError).toBe(false)
     })
 })

@@ -1,6 +1,6 @@
 # SPEC 04 — Firebase seguro y sin errores silenciosos
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 03 (pruebas) y SPEC 05 (Node 24 y Firebase 13)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Que cada usuario solo pueda leer y escribir sus propios datos en Firestore, que no se guarden tokens ni escrituras innecesarias, y que los fallos de Firebase se vean en la app en lugar de perderse.
@@ -103,9 +103,10 @@ Estado nuevo, solo en memoria:
 // MainStore
 saveError: false               // true mientras se muestra el aviso de error de escritura
 
-// TimerStore
-lastSyncedTimes: { [FSid]: [/* centésimas por jugador, de la última escritura */] }
 ```
+
+Para saber si los tiempos cambiaron, `syncTimeValues` compara con el `currentTime` que ya guarda cada
+jugador (lo último escrito), sin estado extra.
 
 Archivos nuevos:
 
@@ -117,9 +118,11 @@ components/SaveErrorToast.vue # aviso de error de escritura
 tests/rules/firestore.rules.spec.js
 vitest.rules.config.mjs
 tests/unit/authErrors.spec.js
+tests/unit/UserStore.spec.js
+tests/e2e/cuenta.spec.js
 ```
 
-Dependencias de desarrollo nuevas: `firebase-tools` y `@firebase/rules-unit-testing`, en la última versión estable compatible con Node 24 y Firebase 13, con versión fija.
+Dependencias de desarrollo nuevas: `firebase-tools` y `@firebase/rules-unit-testing`, con versión fija: `firebase-tools@15.35.0` y `@firebase/rules-unit-testing@6.0.0` (pide Firebase 13).
 
 ## Plan de implementación
 
@@ -141,7 +144,7 @@ Rama `spec-04-firebase-seguro`. Cada paso deja la app funcionando, con `npm test
    - `removeTimer` y `updateTimers` quitan la referencia con `arrayRemove`.
 
    Unitarias para cada caso, con Firestore simulado.
-5. **Guardado solo con cambios.** `syncTimeValues` compara con `lastSyncedTimes[FSid]` y no escribe si nada cambió. `TimerApp.vue` llama a `syncTimeValues` una vez al desmontarse. Unitarias: dos llamadas con los mismos tiempos escriben una vez; con un tiempo distinto escribe de nuevo.
+5. **Guardado solo con cambios.** `syncTimeValues` compara con el `currentTime` guardado de cada jugador y no escribe si nada cambió. `TimerApp.vue` llama a `syncTimeValues` una vez al desmontarse. Unitarias: dos llamadas con los mismos tiempos escriben una vez; con un tiempo distinto escribe de nuevo.
 6. **Errores de escritura visibles.** Todas las escrituras de `TimerStore` y `UserStore` capturan el error y llaman a `mainStore.reportSaveError()`. `SaveErrorToast.vue` en `app.vue` muestra el aviso mientras `saveError` sea `true`, y se cierra con su X. Unitaria: una escritura que falla pone `saveError` en `true` sin lanzar el error.
 7. **Mensajes de login y registro.** `utils/authErrors.js` traduce los códigos más comunes:
    - `auth/invalid-credential`, `auth/wrong-password` y `auth/user-not-found` → "Wrong email or password."

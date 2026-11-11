@@ -27,6 +27,15 @@ jobs:
       - name: Pruebas unitarias
         run: npm run test:unit
 
+      # El emulador de Firestore (firebase-tools) necesita Java 21 o posterior
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Pruebas de reglas de Firestore (emulador)
+        run: npm run test:rules
+
       - name: Instalar Chromium para Playwright
         run: npx playwright install --with-deps chromium
 

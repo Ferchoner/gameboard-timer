@@ -23,7 +23,10 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 1. `app.vue` espera a que Firebase Auth y Firestore estén listos (`MainStore`) y llama a
    `userStore.listenAuth()`.
 2. Si hay usuario, `getUserData` lee `Users/{uid}` y después cada documento de `Timers` que
-   referencia, y los pone en `TimerStore.timers`.
+   referencia, y los pone en `TimerStore.timers`. Es la única carga: el login espera a la del
+   listener. Si `Users/{uid}` no existe (registro a medias), lo crea con email, nombre y
+   `timers: []`; si tiene `accessToken` (cuentas viejas), lo borra. Los timers que ya no existen se
+   ignoran. Si la lectura falla, la sesión queda sin comprobar y el loading avisa a los 15 s.
 3. Si no hay usuario, deja el usuario vacío (invitado) y vacía los timers.
 4. Mientras `usrChecked` es `false` se muestra `IsLoadingComponent`. Si a los 15 s sigue así
    (Firebase no responde, o falla la lectura de `Users` sin conexión), muestra "Couldn't connect.
@@ -32,8 +35,11 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 ### Login, registro y logout
 
 - Login: modal en el header (`LoginFormComponent`), email y contraseña.
-- Registro (`UserRegisterForm`): crea el usuario en Auth, escribe `Users/{uid}` y pone
-  `displayName` con nombre y apellido.
+- Registro (`UserRegisterForm`): valida que la contraseña tenga al menos 6 caracteres, crea el
+  usuario en Auth, escribe `Users/{uid}` (sin token) y pone `displayName` con nombre y apellido.
+- Los errores de login y registro se traducen a mensajes en inglés (`utils/authErrors.js`), por
+  ejemplo "Wrong email or password."; un código desconocido muestra "Something went wrong. Try
+  again.".
 - Logout: botón del header; el listener de Auth limpia usuario y timers.
 
 ### Timers (`components/Page/Timers.vue`, `TimerComponent.vue`, `TimerModal.vue`)
@@ -86,7 +92,6 @@ Proyecto Firebase `timer-42311`. **No cambiar sin una spec aprobada.**
   username: 'ana',          // parte del email antes de "@"
   firstName: 'Ana',
   lastName: 'López',
-  accessToken: '…',         // se guarda el token del registro
   uid: '…',
   guest: false,
   timers: [/* DocumentReference a Timers/{FSid} */]
@@ -113,9 +118,20 @@ Proyecto Firebase `timer-42311`. **No cambiar sin una spec aprobada.**
 Escrituras (`stores/TimerStore.js`):
 
 - `addTimer` → `setDocument('Timers', FSid)` y agrega la referencia a `Users/{uid}.timers`.
-- `removeTimer` → `deleteDocument('Timers', FSid)` y quita la referencia por índice.
+- `removeTimer` → `deleteDocument('Timers', FSid)` y quita la referencia de `Users/{uid}.timers`
+  por id (`arrayRemove`).
 - `syncTimer` → iguala siempre `timeValue` y `currentTime` de todos los jugadores al del primero
   (`applySharedTime`, como número) y, con sesión, hace `updateDocument` del timer completo.
-- `syncTimeValues` → `updateDocument` solo de `players` con el `currentTime` actual.
+- `syncTimeValues` → `updateDocument` solo de `players` con el `currentTime` actual, y solo si
+  algún tiempo cambió respecto al guardado. `TimerApp` lo llama cada 5 s y al salir de la
+  pantalla, así que en pausa no escribe.
+- Si una escritura falla, no se lanza el error: `guardWrite` (`stores/MainStore.js`) muestra el
+  aviso "Couldn't save changes. Check your connection." (`SaveErrorToast`), que se cierra con su X.
+
+### Reglas de seguridad (`firestore.rules`)
+
+Cada usuario con sesión solo lee y escribe su `Users/{uid}` y los `Timers/{id}` cuyo id empieza con
+`{uid}-`. Lo demás queda negado. Se prueban con `npm run test:rules` y se publican a mano (ver
+`docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
 
 Las clases `Timer` y `Player` (en `TimerStore.js`) definen los valores por defecto.

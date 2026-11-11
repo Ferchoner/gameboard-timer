@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import {useUserStore} from "~/stores/UserStore";
+import { guardWrite } from "~/stores/MainStore";
 import { faker } from '@faker-js/faker/locale/en';
 
 export const MIN_PLAYERS = 1;
@@ -65,16 +66,13 @@ export const useTimerStore = defineStore( 'TimerStore', {
                 const frData = { ...this.timers[i] };
                 frData.players = this.timers[i].players.map(player => { return {...player} });
 
-                return await Promise.all([
-                    await setDocument('Timers', this.timers[i].FSid, frData),
-                    await userStore.updateTimers(this.timers[i].FSid, 'add')
-                ]);
+                // Primero el timer y después la referencia: las reglas solo dejan referenciar timers propios
+                await guardWrite(setDocument('Timers', this.timers[i].FSid, frData));
+                return await userStore.updateTimers(this.timers[i].FSid, 'add');
             }
             else {
-                return await Promise.all([
-                    await deleteDocument('Timers', dTimer.FSid),
-                    await userStore.updateTimers(i, 'delete')
-                ])
+                await guardWrite(deleteDocument('Timers', dTimer.FSid));
+                return await userStore.updateTimers(dTimer.FSid, 'delete');
             }
         },
         applySharedTime(i) {
@@ -93,21 +91,28 @@ export const useTimerStore = defineStore( 'TimerStore', {
                 const { updateDocument } = useFirestore();
                 const frData = { ...this.timers[i] };
                 frData.players = this.timers[i].players.map(player => ({ ...player }));
-                updateDocument('Timers', this.timers[i].FSid, frData);
+                return guardWrite(updateDocument('Timers', this.timers[i].FSid, frData));
             }
         },
+        // timeValues: centésimas restantes por jugador. Solo escribe si algún tiempo cambió desde
+        // lo último guardado (currentTime, en minutos): en pausa no hay escrituras.
         async syncTimeValues(i, timeValues) {
             const userStore = useUserStore();
-            if (userStore.user.uid && userStore.usrChecked) { // User exists in Firesore
-                const { updateDocument } = useFirestore();
-                const frData = {};  // Only pass players to update them
-                const fixedTime = this.timers[i].players[0].timeValue;
-                frData.players = this.timers[i].players.map((player, j) => {
+            const timer = this.timers[i];
+            if (!timer || !userStore.user.uid || !userStore.usrChecked) return null;
+            const changed = timer.players.some((player, j) =>
+                timeValues[j] !== undefined && Math.round(Number(player.currentTime) * 6000) !== timeValues[j]);
+            if (!changed) return null;
+
+            const { updateDocument } = useFirestore();
+            const frData = {};  // Only pass players to update them
+            frData.players = timer.players.map((player, j) => {
+                if (timeValues[j] !== undefined) {
                     player.currentTime = (timeValues[j] / 6000);
-                    return {...player}
-                });
-                updateDocument('Timers', this.timers[i].FSid, frData);
-            }
+                }
+                return {...player}
+            });
+            return guardWrite(updateDocument('Timers', timer.FSid, frData));
         }
     }
 })
