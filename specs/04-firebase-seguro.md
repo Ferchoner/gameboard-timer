@@ -1,6 +1,6 @@
 # SPEC 04 — Firebase seguro y sin errores silenciosos
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 03 (pruebas) y SPEC 05 (Node 24 y Firebase 13)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Que cada usuario solo pueda leer y escribir sus propios datos en Firestore, que no se guarden tokens ni escrituras innecesarias, y que los fallos de Firebase se vean en la app en lugar de perderse.

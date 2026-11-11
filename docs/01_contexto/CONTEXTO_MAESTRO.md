@@ -70,5 +70,5 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   (PR #10).
 - SPEC 04, Firebase seguro y sin errores silenciosos (`specs/04-firebase-seguro.md`): reglas por
   dueño probadas con el emulador, sin `accessToken`, guardado solo con cambios, errores visibles y
-  login y registro robustos. En borrador. Favicons, manifest y timeout del loading van en un PR
+  login y registro robustos. Aprobada (Fernando, 2026-11-11). Favicons, manifest y timeout del loading van en un PR
   aparte, sin spec (Fernando, 2026-11-11).
