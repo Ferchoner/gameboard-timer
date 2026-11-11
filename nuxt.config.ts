@@ -18,8 +18,8 @@ export default defineNuxtConfig({
                 {rel: 'icon', sizes: '32x32', href: '/gameboard-timer/favicon-32x32.png'},
                 {rel: 'icon', sizes: '16x16', href: '/gameboard-timer/favicon-16x16.png'},
                 {rel: 'manifest', href: '/gameboard-timer/site.webmanifest'},
-                {rel: 'mask-icon', href: '/gameboard-timer/safari-pinned-tab.svg', color: '#1D1D1B'},
-                {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0'}
+                {rel: 'mask-icon', href: '/gameboard-timer/safari-pinned-tab.svg', color: '#1D1D1B'}
+                // Material Symbols ya no viene de Google Fonts: assets/css/_icons.scss (SPEC 06)
             ],
             bodyAttrs: {
                 class: 'flex'
