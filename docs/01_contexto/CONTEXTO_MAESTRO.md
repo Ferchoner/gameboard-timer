@@ -64,4 +64,4 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 05, actualizar Node y dependencias (`specs/05-actualizar-dependencias.md`): Node 24,
   Nuxt 4, Pinia 4, Firebase 13, faker 10, Vitest 5 y Playwright 1.65, solo npm con `npm ci`, y
   acciones de GitHub al día (el deploy fallaba desde antes por `upload-artifact@v3`). Implementada
-  (PR pendiente de merge).
+  (PR #10).
