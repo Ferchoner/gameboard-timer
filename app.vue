@@ -17,6 +17,7 @@ const mainStore = useMainStore();
       <NuxtPage />
     </div>
     <FooterComponent v-if="!isTA" />
+    <SaveErrorToast />
     <is-loading-component v-if="isLoadingData || !userStore.usrChecked" />
   </div>
 </template>
