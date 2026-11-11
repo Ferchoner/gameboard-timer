@@ -54,5 +54,6 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 02, reloj fiable y pantalla encendida (`specs/02-reloj-fiable.md`): tiempo con
   `Date.now()`, Wake Lock en la pantalla del timer, alarma al volver, Continuous sin trabas y
   "Timer not found". Implementada (PR #6), probada por Fernando en móvil el 2026-11-11.
-- Siguientes, según la revisión QA del 2026-11-11: spec 03 (pruebas automáticas) y spec 04
-  (Firebase y producción). Actualizar Node y dependencias va en su propio hilo.
+- Orden aprobado de las siguientes (Fernando, 2026-11-11): spec 03 (pruebas automáticas,
+  `specs/03-pruebas-automaticas.md`), después spec 05 (actualizar Node y dependencias) y al final
+  spec 04 (Firebase y producción). La 05 debe dejar las pruebas de la 03 en verde.
