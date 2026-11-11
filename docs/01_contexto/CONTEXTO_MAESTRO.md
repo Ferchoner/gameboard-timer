@@ -1,0 +1,51 @@
+# Timer for Friends — Contexto maestro
+
+> Estado al 2026-11-11. Documento vivo: se actualiza al cerrar cada mejora.
+
+## Identidad y objetivo
+
+App web de temporizadores para jugadores de juegos de mesa ("Timer for Friends", repo
+`Ferchoner/gameboard-timer`). Hecha con Nuxt 3, Pinia, Bootstrap 5 y Firebase. Publicada en
+GitHub Pages bajo la ruta `/gameboard-timer/`. Desarrollada en agosto de 2023 y considerada
+terminada; ahora entra en una etapa de mejoras y ajustes.
+
+## Concepto
+
+- Un **timer** agrupa a los jugadores de una partida. Tiene título, lista de jugadores y el
+  modo "Continuous" (`progresive`).
+- Cada **jugador** tiene nombre, color y tiempo en minutos (todos comparten el tiempo del
+  primero, de 10 a 120 min; 25 por defecto).
+- Modo normal: cada jugador tiene su propio botón de iniciar, pausar y reiniciar.
+- Modo Continuous: un solo control; "siguiente" pausa al jugador actual y arranca al siguiente.
+- Al llegar a 0 suena `time_over.mp3`.
+- **Invitado:** los timers viven solo en memoria y se pierden al recargar.
+- **Con cuenta** (email y contraseña en Firebase Auth): los timers se guardan en Firestore y se
+  cargan al iniciar sesión.
+
+## Decisiones aprobadas
+
+- Estructura de trabajo con IA basada en el proyecto `Ferchoner/pacmanlike-game`: `CLAUDE.md`,
+  `docs/` y skills `/spec` y `/spec-impl` (Fernando, 2026-11-11).
+- Tono de la IA: directo, sin rol de tutor (Fernando, 2026-11-11).
+- Todo cambio va en rama y PR; nunca push directo a `master`, porque `master` despliega
+  (Fernando, 2026-11-11).
+- CI de build en cada PR (`.github/workflows/ci.yml`) (Fernando, 2026-11-11).
+- La actualización de Node 18 y de dependencias va en una spec aparte, no ahora
+  (Fernando, 2026-11-11).
+
+## Pendientes
+
+- Actualizar Node (el deploy usa Node 18, fuera de soporte) y dependencias. Spec aparte.
+- `package-lock.json` desincronizado con `package.json` (`npm ci` falla; falta
+  `@faker-js/faker`). Hay además un `yarn.lock`. Decidir un solo gestor de paquetes.
+- `@nuxt/devtools` está en `latest`; conviene fijar la versión.
+- Sin pruebas automáticas.
+- Origen y licencia de `time_over.mp3` y de `clock_logo.png`: desconocidos (ver
+  `docs/03_recursos/RECURSOS_Y_LICENCIAS.md`).
+- La página "My Account" (`/user`) está vacía y su botón está oculto en el header.
+
+## Mejoras solicitadas
+
+Lista de Fernando. Cada una se trabaja con su propia spec o PR.
+
+- (vacía por ahora)
