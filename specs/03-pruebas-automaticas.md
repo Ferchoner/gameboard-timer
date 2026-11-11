@@ -1,6 +1,6 @@
 # SPEC 03 — Pruebas automáticas
 
-> **Estado:** Borrador
+> **Estado:** Implementado
 > **Depende de:** SPEC 01, SPEC 02
 > **Fecha:** 2026-11-11
 > **Objetivo:** Que cada PR corra en la CI pruebas unitarias y E2E que cubran el editor de timers y el reloj, para detectar regresiones antes de fusionar a `master`.
@@ -101,15 +101,15 @@ Rama `spec-03-pruebas-automaticas`. Cada paso deja la app y las pruebas funciona
 
 ## Criterios de aceptación
 
-- [ ] `npm run test:unit` pasa en local y en la CI, con al menos las pruebas de los pasos 2 y 3.
-- [ ] `npm run test:e2e` pasa en local, después de `NITRO_PRESET=github-pages npm run build`, y en la CI, en los proyectos de escritorio y móvil.
-- [ ] Las E2E cubren cada criterio de aceptación de las specs 01 y 02 que se puede comprobar como invitado y sin un teléfono real.
-- [ ] Si se revierte a mano el arreglo de P0-2 ("−" borra al primero), al menos una prueba falla. Se comprueba una vez y no se sube.
-- [ ] Ninguna prueba E2E envía peticiones a Google Analytics.
-- [ ] Un error de consola de la app hace fallar la prueba E2E donde ocurre.
-- [ ] El job de CI de un PR corre build, unitarias y E2E, y queda en rojo si cualquiera falla.
-- [ ] `package-lock.json` y `yarn.lock` no cambian en este PR.
-- [ ] `CLAUDE.md` ya no dice que no hay pruebas e indica cómo correrlas.
+- [x] `npm run test:unit` pasa en local y en la CI, con al menos las pruebas de los pasos 2 y 3.
+- [x] `npm run test:e2e` pasa en local, después de `NITRO_PRESET=github-pages npm run build`, y en la CI, en los proyectos de escritorio y móvil.
+- [x] Las E2E cubren cada criterio de aceptación de las specs 01 y 02 que se puede comprobar como invitado y sin un teléfono real.
+- [x] Si se revierte a mano el arreglo de P0-2 ("−" borra al primero), al menos una prueba falla. Se comprueba una vez y no se sube.
+- [x] Ninguna prueba E2E envía peticiones a Google Analytics.
+- [x] Un error de consola de la app hace fallar la prueba E2E donde ocurre.
+- [x] El job de CI de un PR corre build, unitarias y E2E, y queda en rojo si cualquiera falla.
+- [x] `package-lock.json` y `yarn.lock` no cambian en este PR.
+- [x] `CLAUDE.md` ya no dice que no hay pruebas e indica cómo correrlas.
 
 ## Decisiones
 

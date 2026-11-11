@@ -29,7 +29,8 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 - Tono de la IA: directo, sin rol de tutor (Fernando, 2026-11-11).
 - Todo cambio va en rama y PR; nunca push directo a `master`, porque `master` despliega
   (Fernando, 2026-11-11).
-- CI de build en cada PR (`.github/workflows/ci.yml`) (Fernando, 2026-11-11).
+- CI de build en cada PR (`.github/workflows/ci.yml`) (Fernando, 2026-11-11). Desde la spec 03
+  corre también las pruebas unitarias y E2E (Fernando, 2026-11-11).
 - La actualización de Node 18 y de dependencias va en una spec aparte, no ahora
   (Fernando, 2026-11-11).
 
@@ -41,7 +42,8 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 - `package-lock.json` desincronizado con `package.json` (`npm ci` falla; falta
   `@faker-js/faker`). Hay además un `yarn.lock`. Decidir un solo gestor de paquetes.
 - `@nuxt/devtools` está en `latest`; conviene fijar la versión.
-- Sin pruebas automáticas.
+- Las pruebas automáticas (spec 03) solo cubren el modo invitado. Probar con cuenta requiere el
+  emulador de Firebase, que toca `plugins/firebase.client.ts`: spec aparte.
 - Origen y licencia de `time_over.mp3` y de `clock_logo.png`: desconocidos (ver
   `docs/03_recursos/RECURSOS_Y_LICENCIAS.md`).
 - La página "My Account" (`/user`) está vacía y su botón está oculto en el header.
@@ -59,3 +61,6 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - Orden aprobado de las siguientes (Fernando, 2026-11-11): spec 03 (pruebas automáticas,
   `specs/03-pruebas-automaticas.md`), después spec 05 (actualizar Node y dependencias) y al final
   spec 04 (Firebase y producción). La 05 debe dejar las pruebas de la 03 en verde.
+- SPEC 03, pruebas automáticas (`specs/03-pruebas-automaticas.md`): Vitest para `useCountdown` y
+  `TimerStore`, Playwright para editor, reloj y rutas como invitado, y ambas en la CI. Implementada
+  (PR #9).

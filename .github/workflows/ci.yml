@@ -1,4 +1,4 @@
-# CI: en cada PR comprueba que la app sigue compilando, igual que el deploy.
+# CI: en cada PR comprueba que la app compila, igual que el deploy, y corre las pruebas.
 # Si falla, el PR aparece en rojo antes de fusionarlo a master (que publica).
 name: CI
 
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build de producción
+    name: Build y pruebas
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,3 +24,21 @@ jobs:
         run: npm run build
         env:
           NITRO_PRESET: github-pages
+
+      - name: Pruebas unitarias
+        run: npm run test:unit
+
+      - name: Instalar Chromium para Playwright
+        run: npx playwright install --with-deps chromium
+
+      # Reutiliza el build anterior: Playwright sirve .output/public bajo /gameboard-timer/
+      - name: Pruebas E2E
+        run: npm run test:e2e
+
+      - name: Subir reporte de Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
