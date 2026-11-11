@@ -13,7 +13,8 @@ GitHub Pages; el trabajo actual es de **mejoras y ajustes**.
 
 ## Stack
 
-Nuxt 3 (Vue 3) + Pinia + Bootstrap 5 + SCSS + Firebase (Auth, Firestore, Analytics).
+Nuxt 4 (Vue 3) + Pinia + Bootstrap 5 + SCSS + Firebase 13 (Auth, Firestore, Analytics), con Node 24
+(`.nvmrc`). Gestor de paquetes: solo npm.
 Iconos: Material Symbols (Google Fonts). Git/GitHub, deploy con GitHub Actions a GitHub Pages.
 
 ## Fuente de verdad (leer antes de trabajar)
@@ -69,7 +70,8 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 
 ## Comandos
 
-- `npm install` — instalar dependencias (el `package-lock.json` no está sincronizado; `npm ci` falla).
+- `npm ci` — instalar dependencias exactamente como el `package-lock.json` (igual que la CI y el
+  deploy). `npm install <paquete>` solo para agregar o actualizar uno.
 - `npm run dev` — servidor de desarrollo (http://localhost:3000/gameboard-timer/).
 - `npm run build` — build de producción. Con `NITRO_PRESET=github-pages` genera `.output/public`,
   igual que el deploy.
@@ -80,5 +82,4 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
   primera vez: `npx playwright install chromium`.
 - `npm test` — unitarias y E2E.
 
-Las pruebas usan versiones fijas compatibles con Node 18 (`vitest@3.2.7`,
-`@playwright/test@1.61.1`). No hay typecheck ni linter configurados.
+No hay typecheck ni linter configurados.
