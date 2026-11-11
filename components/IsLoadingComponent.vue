@@ -1,12 +1,27 @@
 <template>
   <div class="loading-container">
-    <img src="~/assets/images/loading_icon.svg" alt="Loading..." class="loading-img">
+    <div v-if="failed" class="loading-failed" role="alert">
+      <p>Couldn't connect. Check your connection and reload.</p>
+      <button type="button" class="btn btn-light" @click="reload">Reload</button>
+    </div>
+    <img v-else src="~/assets/images/loading_icon.svg" alt="Loading..." class="loading-img">
   </div>
 </template>
 
 <script>
 export default {
-  name: "IsLoadingComponent"
+  name: "IsLoadingComponent",
+  props: {
+    failed: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    reload() {
+      window.location.reload();
+    }
+  }
 }
 </script>
 
@@ -30,6 +45,20 @@ export default {
   display: flex;
   justify-content: center;
   z-index: 990;
+
+  .loading-failed {
+    align-self: center;
+    max-width: 90%;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #1d1d1b;
+    color: #ffffff;
+    text-align: center;
+
+    p {
+      margin-bottom: 12px;
+    }
+  }
 
   img.loading-img {
     position: relative;
