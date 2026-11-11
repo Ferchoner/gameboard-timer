@@ -17,13 +17,15 @@ useHead({
           <div class="d-flex justify-content-between border-bottom pb-2 align-items-center px-2">
             <h6 class="pb-2 mb-0">Timers</h6>
             <div class="action-buttons">
-              <button class="btn btn-sm btn-success" @click="addTimer(timerStore, 'New Timer', userStore)">
-                <span class="material-symbols-outlined">add_circle</span>
+              <button class="btn btn-sm btn-success" aria-label="New timer" @click="addTimer(timerStore, 'New Timer', userStore)">
+                <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      <GuestNotice />
 
       <TimerComponent
           v-for="(timer, i) in timerStore.timers"

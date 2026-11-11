@@ -164,7 +164,7 @@ onBeforeUnmount(() => {
       >
         <div class="card card-cover h-100 overflow-hidden text-white rounded-5 shadow-lg" :style="{ backgroundColor: player.color }">
           <div class="d-flex flex-column h-100 text-white text-shadow-1">
-            <h2 class="player-name">{{ player.name }}</h2>
+            <h2 class="player-name" :title="player.name">{{ player.name }}</h2>
             <span class="timer-countdown text-center">
               {{ formatTime(playerIndex) }}
             </span>
@@ -254,6 +254,13 @@ onBeforeUnmount(() => {
         .player-name {
           font-family: Khand, Handjet, sans-serif;
           font-weight: 700;
+          // Nombres largos se cortan con "…" en todas las distribuciones (SPEC 06).
+          // contain: inline-size evita que el nombre ensanche la tarjeta; el ancho lo ponen
+          // el contador y los botones, como con un nombre corto.
+          contain: inline-size;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .timer-countdown {

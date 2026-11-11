@@ -5,6 +5,7 @@ import { faker } from '@faker-js/faker/locale/en';
 
 export const MIN_PLAYERS = 1;
 export const MAX_PLAYERS = 12;
+export const MAX_NAME_LENGTH = 20; // caracteres por nombre de jugador en el editor
 
 export const useTimerStore = defineStore( 'TimerStore', {
     state: () => {

@@ -1,6 +1,6 @@
 <script setup>
 import { useUserStore } from "@/stores/UserStore";
-import { useTimerStore, MIN_PLAYERS, MAX_PLAYERS } from "@/stores/TimerStore";
+import { useTimerStore, MIN_PLAYERS, MAX_PLAYERS, MAX_NAME_LENGTH } from "@/stores/TimerStore";
 const userStore = useUserStore();
 const timerStore = useTimerStore();
 </script>
@@ -37,6 +37,7 @@ const timerStore = useTimerStore();
                     <label for="timer-title">Timer Title</label>
                     <input
                         type="text"
+                        id="timer-title"
                         class="form-control timer-title mt-2"
                         placeholder="Timer one"
                         v-model="timerStore.timers[timerIndex].title"
@@ -44,8 +45,8 @@ const timerStore = useTimerStore();
                     >
                   </div>
                   <div class="col-7 mx-0 px-0">
-                    <label for="timer-players" class="form-label">Players (Timer buttons)</label>
-                    <div class="input-group mb-3 px-1">
+                    <span id="timer-players-label" class="form-label d-inline-block">Players (Timer buttons)</span>
+                    <div class="input-group mb-3 px-1" role="group" aria-labelledby="timer-players-label">
                       <span
                           :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex] <= MIN_PLAYERS ? ' is-disabled' : ''}`"
                           id="basic-addon-minus"
@@ -56,9 +57,9 @@ const timerStore = useTimerStore();
                       >
                         remove
                       </span>
-                      <label for="players" class="align-items-center d-flex form-control justify-content-center players-number text-center">
+                      <span class="align-items-center d-flex form-control justify-content-center players-number text-center" aria-live="polite">
                         {{ timerStore.playersCount[timerIndex] }}
-                      </label>
+                      </span>
                       <span
                           :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex] >= MAX_PLAYERS ? ' is-disabled' : ''}`"
                           id="basic-addon-plus"
@@ -94,15 +95,16 @@ const timerStore = useTimerStore();
                   <div class="col-12 players-container shadow-sm border-bottom mb-2 px-2 mx-0" v-for="(player, i) in timerStore.timers[timerIndex].players">
                     <div class="row px-0 mx-0">
                       <div class="col-8 text-start mb-3 px-0 mx-0">
-                        <label for="timer-player-name" class="form-label">Player name</label>
+                        <label :for="`timer-player-name-${i}`" class="form-label">Player name</label>
                         <input
                             type="text" class="form-control"
                             :id="`timer-player-name-${i}`"
+                            :maxlength="MAX_NAME_LENGTH"
                             v-model="player.name"
                             required>
                       </div>
                       <div class="col-4 text-start mb-3 px-0 mx-0">
-                        <label for="timer-player-color" class="form-label ms-3">Color</label>
+                        <label :for="`timer-player-color-${i}`" class="form-label ms-3">Color</label>
                         <input
                             type="color"
                             class="form-control form-control-color ms-3"
@@ -203,7 +205,7 @@ export default {
             }
           }
 
-          label.players-number {
+          .players-number {
             max-width: 55px;
           }
 

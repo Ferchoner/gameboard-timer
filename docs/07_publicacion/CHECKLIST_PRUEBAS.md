@@ -19,6 +19,9 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 | Editor como invitado | `npm run test:e2e` (`editor.spec.js`): crear, tiempo común y reinicio, "+" y "−", límites, validaciones con "Update Timer" y la X, confirmación al borrar, borrar el último timer editado |
 | Timer en marcha | `npm run test:e2e` (`reloj.spec.js`), con reloj y visibilidad simulados: modo normal, Continuous con jugadores en 0, todos en 0, alarma al volver de segundo plano, Wake Lock al entrar y salir |
 | Rutas en producción | `npm run test:e2e` (`rutas.spec.js`): recargar `/timers` y `/user/signup-form`, "Timer not found" en `/timer-app/0` y `/timer-app/abc` |
+| Iconos | `npm run test:unit` (`icons.spec.js`): todo icono usado está en el subconjunto. `npm run test:e2e` (`pulido.spec.js`): Material Symbols carga sin pedir nada a Google y se ve como icono |
+| Accesibilidad y nombres largos | `npm run test:e2e` (`pulido.spec.js`): nombre accesible en los botones de la lista, cada etiqueta apunta a su campo, nombre de 20 caracteres como máximo, con 12 jugadores ningún nombre se sale de su tarjeta |
+| Aviso al invitado | `npm run test:e2e` (`pulido.spec.js`): sin timers no hay aviso ni confirmación; con un timer hay aviso y `beforeunload`, y cancelar no borra nada |
 | Favicons y loading | `npm run test:e2e` (`produccion.spec.js`): favicons, manifest y sus iconos responden 200 bajo `/gameboard-timer/`; si Firebase no responde en 15 s, el loading muestra el aviso con "Reload" |
 
 Las E2E corren como invitado, en Chromium de escritorio y en un Pixel 7 emulado, contra el build de
@@ -42,6 +45,9 @@ visual (distribución de jugadores, header).
 - [ ] Con 1 jugador "−" está desactivado; con 12, "+" está desactivado.
 - [ ] Título o nombre vacío: ni "Update Timer" ni la X cierran el modal, y se ve el mensaje.
 - [ ] Editar el último timer de la lista, guardarlo y borrarlo no deja errores en consola.
+- [ ] Con un timer, la lista muestra el aviso de invitado; recargar pide confirmación y cancelar
+  deja el timer (en móviles que no muestran el diálogo, queda el aviso).
+- [ ] Los iconos se ven igual que antes, también con Google Fonts bloqueado (pestaña Network).
 
 ### Timer en marcha
 - [ ] Modo normal: iniciar, pausar y reiniciar cada jugador por separado.
@@ -59,6 +65,7 @@ visual (distribución de jugadores, header).
 - [ ] Recargar `/timer-app/0` como invitado muestra "Timer not found" y el botón lleva a la lista.
 - [ ] Botones de inicio y atrás del header oscuro.
 - [ ] Distribución correcta con 2, 3, 4 y más jugadores.
+- [ ] Con nombres de 20 caracteres, en el móvil se cortan con "…" y no se salen de la tarjeta.
 
 ### Con cuenta
 - [ ] Registro de usuario nuevo.

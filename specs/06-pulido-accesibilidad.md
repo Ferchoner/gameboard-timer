@@ -1,6 +1,6 @@
 # SPEC 06 — Aviso al invitado, nombres largos, accesibilidad e iconos propios
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 01 (editor) y SPEC 04 (último cambio a los componentes de sesión)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Cerrar los ajustes pequeños de la revisión QA: avisar al invitado antes de que pierda sus timers, que los nombres largos no rompan la pantalla del timer, que los controles tengan nombre accesible y que los iconos se vean sin depender de Google Fonts.
@@ -88,14 +88,14 @@ Rama `spec-06-pulido-accesibilidad`. Cada paso deja la app funcionando, con `npm
    - Correrlo una vez y agregar `LICENSE-material-symbols.txt` y `_icons.scss`, importado desde `master.scss`.
    - Quitar el `<link>` de Google Fonts.
    - Unitaria `icons.spec.js`: busca en `components/` el texto de cada `material-symbols-outlined` y falla si alguno no está en la lista del script.
-   - E2E: la app no pide nada a `fonts.googleapis.com` ni a `fonts.gstatic.com`, `document.fonts.check('24px "Material Symbols Outlined"')` es verdadero y el ancho del icono de "+" es el de un icono, no el de un texto.
+   - E2E: la app no pide Material Symbols a `fonts.googleapis.com` ni a `fonts.gstatic.com`, `document.fonts.check('24px "Material Symbols Outlined"')` es verdadero y el ancho del icono de "+" es el de un icono, no el de un texto.
 2. **Nombre accesible y etiquetas.**
    - `aria-label` en los botones de la lista y `aria-hidden` en los iconos.
    - Ids que coinciden con cada `label for` en el login, el registro y el editor.
    - E2E: `getByRole('button', { name: 'New timer' })` y `getByLabel('Email address')`, entre otros, encuentran sus elementos.
 3. **Nombres largos.**
    - `MAX_NAME_LENGTH` y `maxlength` en el campo de nombre del editor.
-   - CSS en `TimerApp.vue`: `overflow: hidden` y `text-overflow: ellipsis` en `.player-name` para todas las distribuciones.
+   - CSS en `TimerApp.vue`: `overflow: hidden`, `text-overflow: ellipsis` y `contain: inline-size` en `.player-name` para todas las distribuciones. `contain` hace que el nombre no ensanche la tarjeta, así que la distribución queda igual que con nombres cortos.
    - E2E: escribir 30 caracteres deja 20. Con 12 jugadores de nombre largo, ningún nombre es más ancho que su tarjeta.
 4. **Aviso al invitado.**
    - `GuestNotice.vue` en la lista, visible si `userStore.isGuest` y hay timers.
@@ -111,7 +111,7 @@ Rama `spec-06-pulido-accesibilidad`. Cada paso deja la app funcionando, con `npm
 - [ ] `NITRO_PRESET=github-pages npm run build` termina sin errores.
 - [ ] `npm test` y `npm run test:rules` pasan en local y en la CI.
 - [ ] Sin conexión a Google, los iconos se ven como iconos y no como texto.
-- [ ] La app no hace peticiones a `fonts.googleapis.com` ni a `fonts.gstatic.com`.
+- [ ] La app no pide Material Symbols a `fonts.googleapis.com` ni a `fonts.gstatic.com`. Las fuentes de texto (Handjet y Khand, en `master.scss`) siguen en Google Fonts y quedan fuera de esta spec.
 - [ ] Los iconos se ven igual que antes, porque son la misma fuente y la misma variante.
 - [ ] Todo icono usado en `components/` está en el subconjunto; si no, falla una prueba.
 - [ ] Un lector de pantalla anuncia "Play {título}", "Edit {título}", "Delete {título}" y "New timer" en la lista.

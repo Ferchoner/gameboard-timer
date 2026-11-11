@@ -1,6 +1,7 @@
 <script setup>
 import { useUserStore } from "~/stores/UserStore";
 import { useMainStore } from "~/stores/MainStore";
+import { useTimerStore } from "~/stores/TimerStore";
 import IsLoadingComponent from "./components/IsLoadingComponent";
 const userStore = useUserStore();
 const mainStore = useMainStore();
@@ -39,6 +40,16 @@ export default {
     }
   },
   mounted() {
+    // Invitado con timers: el navegador pide confirmar antes de recargar o cerrar (SPEC 06).
+    // El texto del diálogo lo pone el navegador; el aviso con el detalle está en GuestNotice.
+    window.addEventListener('beforeunload', (event) => {
+      const userStore = useUserStore();
+      const timerStore = useTimerStore();
+      if (userStore.usrChecked && userStore.isGuest && timerStore.timers.length) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    });
     // Si Firebase no responde, el loading no debe quedarse para siempre sin explicación
     setTimeout(() => {
       const userStore = useUserStore();
