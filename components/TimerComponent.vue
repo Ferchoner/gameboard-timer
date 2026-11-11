@@ -15,7 +15,7 @@ const timerStore = useTimerStore();
           <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#timer-form-backdrop" @click="timerStore.index = timerIndex">
             <span class="material-symbols-outlined">edit</span>
           </button>
-          <button class="btn btn-sm btn-danger" @click="() => timerStore.removeTimer(timerIndex)">
+          <button class="btn btn-sm btn-danger" @click="confirmRemove(timerStore)">
             <span class="material-symbols-outlined">delete</span>
           </button>
         </div>
@@ -35,6 +35,13 @@ export default {
     timerIndex: {
       type: Number,
       default: 0
+    }
+  },
+  methods: {
+    confirmRemove(timerStore) {
+      if (window.confirm(`Delete "${this.timer.title}"?`)) {
+        timerStore.removeTimer(this.timerIndex);
+      }
     }
   }
 }
