@@ -1,4 +1,5 @@
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, DocumentSnapshot, QuerySnapshot, DocumentReference } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore'
+import type { DocumentSnapshot, QuerySnapshot, DocumentReference } from 'firebase/firestore'
 
 export default function() {
     const { $firestore } = useNuxtApp()
