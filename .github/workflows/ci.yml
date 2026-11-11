@@ -1,0 +1,26 @@
+# CI: en cada PR comprueba que la app sigue compilando, igual que el deploy.
+# Si falla, el PR aparece en rojo antes de fusionarlo a master (que publica).
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Build de producción
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18" # misma versión que el deploy (main.yml)
+
+      # npm install y no npm ci: package-lock.json no está sincronizado (ver pendientes)
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Build
+        run: npm run build
+        env:
+          NITRO_PRESET: github-pages
