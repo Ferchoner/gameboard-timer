@@ -74,7 +74,7 @@ const timerStore = useTimerStore();
                         :id="`timer-player-time`"
                         min="10"
                         max="120"
-                        v-model="timerStore.timers[timerIndex].players[0].timeValue"
+                        v-model.number="timerStore.timers[timerIndex].players[0].timeValue"
                     >
                   </div>
 
