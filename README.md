@@ -22,6 +22,8 @@ npm run test:unit                          # unitarias
 npx playwright install chromium            # solo la primera vez
 NITRO_PRESET=github-pages npm run build    # las E2E corren contra el build
 npm run test:e2e                           # E2E en escritorio y móvil emulado
+npm run test:rules                         # reglas de Firestore en el emulador (Java 21+)
 ```
 
-La CI corre el build, las unitarias y las E2E en cada PR.
+La CI corre el build, las unitarias, las reglas y las E2E en cada PR. Las reglas de Firestore
+(`firestore.rules`) se publican a mano desde la consola de Firebase.

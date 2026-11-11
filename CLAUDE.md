@@ -76,10 +76,14 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - `npm run build` — build de producción. Con `NITRO_PRESET=github-pages` genera `.output/public`,
   igual que el deploy.
 - `npm run preview` — servir el build localmente.
-- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown` y `TimerStore`).
+- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `TimerStore`, `UserStore` y
+  `authErrors`).
 - `npm run test:e2e` — pruebas E2E con Playwright (`tests/e2e/`) contra el build de producción, en
   Chromium de escritorio y móvil emulado. Antes: `NITRO_PRESET=github-pages npm run build`. La
   primera vez: `npx playwright install chromium`.
 - `npm test` — unitarias y E2E.
+- `npm run test:rules` — pruebas de `firestore.rules` con el emulador de Firestore
+  (`tests/rules/`). Necesita Java 21 o posterior; la CI lo instala. Las reglas no se publican con
+  el deploy: Fernando las pega en la consola (ver `docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
 
 No hay typecheck ni linter configurados.
