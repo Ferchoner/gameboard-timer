@@ -1,7 +1,7 @@
 # SPEC 05 — Actualizar Node y dependencias
 
 > **Estado:** Borrador
-> **Depende de:** SPEC 01. Se implementa después de las specs 02, 03 y 04 (aún sin escribir), en ese orden.
+> **Depende de:** SPEC 01. Se implementa después de las specs 02 y 03 y antes de la 04 (aún sin escribir).
 > **Fecha:** 2026-11-11
 > **Objetivo:** Pasar la app a Node 24 y a las versiones actuales de sus dependencias, con un solo gestor de paquetes y un lockfile que permita `npm ci`.
 
@@ -63,7 +63,7 @@ Las versiones exactas son las últimas estables el día de la implementación. A
 
 ## Plan de implementación
 
-Rama `spec-05-actualizar-dependencias`, creada desde `master` cuando ya estén fusionadas las specs 02 a 04. Cada paso deja el build funcionando.
+Rama `spec-05-actualizar-dependencias`, creada desde `master` cuando ya estén fusionadas las specs 02 y 03. Cada paso deja el build funcionando.
 
 1. **Node 24.** Instalar o seleccionar Node 24 en local, añadir `.nvmrc` y `engines.node`, y cambiar `node-version` a `"24"` en `ci.yml` y `main.yml`. Prueba: `npm install` y `NITRO_PRESET=github-pages npm run build` pasan con las dependencias actuales. Si fallan con Nuxt 3.6, se hace este paso junto con el 3.
 2. **Un solo gestor.** Borrar `yarn.lock` y `package-lock.json`, quitar `@sidebase/nuxt-session` y `@nuxtjs/robots`, fijar la versión de `@nuxt/devtools` y regenerar el lockfile con `npm install`. Prueba: con `node_modules` borrado, `npm ci` termina sin errores.
@@ -94,7 +94,7 @@ Rama `spec-05-actualizar-dependencias`, creada desde `master` cuando ya estén f
 - **Sí:** solo npm, con `npm ci` en CI y deploy. Los workflows ya usan npm (Fernando, 2026-11-11).
 - **Sí:** quitar `@sidebase/nuxt-session` y `@nuxtjs/robots`, que no se usan (Fernando, 2026-11-11).
 - **No:** migrar la estructura a `app/`. Nuxt 4 acepta la actual, y moverla sería otra spec (Fernando, 2026-11-11).
-- **Sí:** aplicar esta spec en orden, después de las 02, 03 y 04 (Fernando, 2026-11-11).
+- **Sí:** aplicar esta spec después de las 02 y 03 y antes de la 04. Así la actualización ya tiene pruebas automáticas y la 04 trabaja sobre Firebase 13 (Fernando, 2026-11-11).
 
 ## Riesgos
 
@@ -102,6 +102,6 @@ Rama `spec-05-actualizar-dependencias`, creada desde `master` cuando ya estén f
 | --- | --- |
 | Algo cambió entre Nuxt 3.6 y 4 (hidratación, `useState`, transiciones de página, auto-imports) y el build no lo detecta. | Checklist manual completa en invitado y con cuenta antes del PR; la spec 03 deja pruebas automáticas que ayudan aquí. |
 | Firebase 13 cambia algo en Auth o Firestore que solo se ve con cuenta. El entorno cloud bloquea Firebase. | Probar el modo con cuenta en la máquina de Fernando o en un preview antes del merge. |
-| La spec 03 añade dependencias (Vitest, Playwright) que también habrá que actualizar. | Este plan cubre todas las dependencias que haya en `package.json` cuando se implemente, no solo las de hoy. |
+| La spec 03 añade dependencias (Vitest, Playwright) que también habrá que actualizar. | Este plan cubre todas las dependencias que haya en `package.json` cuando se implemente, no solo las de hoy, y las pruebas de la 03 deben pasar con las versiones nuevas. |
 | Un deploy fallido deja la versión anterior publicada; uno que funciona pero rompe la app la deja rota. | Probar `npm run preview` con el build de `github-pages` antes del merge; si hay problemas, revertir el merge en `master`. |
 | Bootstrap 5.3 con sass nuevo llena el build de avisos de deprecación. | Se aceptan; no rompen el build. Corregirlos va en otra spec. |
