@@ -1,6 +1,7 @@
 # Checklist de pruebas
 
-No hay pruebas automáticas. Antes de cada PR se revisa, en navegador, lo que toque el cambio.
+Antes de cada PR corren las pruebas automáticas (`npm test`, y la CI las repite). Después se revisa,
+en navegador, lo que toque el cambio y no cubran las pruebas.
 Probar en escritorio y en un móvil o emulación de móvil (la app se usa en la mesa de juego).
 
 Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
@@ -10,6 +11,19 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 | Área | Cómo |
 |---|---|
 | Build de producción | `NITRO_PRESET=github-pages npm run build` sin errores |
+| Reloj (`useCountdown`) | `npm run test:unit`: inicio, pausa, tiempo real sin intervalos, aviso único al llegar a 0, reinicios, sin intervalos tras `dispose` |
+| Store (`TimerStore`) | `npm run test:unit`: límites de 1 y 12 jugadores, "−" quita al último, tiempo común como número, índice en rango, Firestore solo con sesión |
+| Editor como invitado | `npm run test:e2e` (`editor.spec.js`): crear, tiempo común y reinicio, "+" y "−", límites, validaciones con "Update Timer" y la X, confirmación al borrar, borrar el último timer editado |
+| Timer en marcha | `npm run test:e2e` (`reloj.spec.js`), con reloj y visibilidad simulados: modo normal, Continuous con jugadores en 0, todos en 0, alarma al volver de segundo plano, Wake Lock al entrar y salir |
+| Rutas en producción | `npm run test:e2e` (`rutas.spec.js`): recargar `/timers` y `/user/signup-form`, "Timer not found" en `/timer-app/0` y `/timer-app/abc` |
+
+Las E2E corren como invitado, en Chromium de escritorio y en un Pixel 7 emulado, contra el build de
+producción servido bajo `/gameboard-timer/` (`tests/e2e/serve.mjs` imita GitHub Pages, con su
+`404.html`). Bloquean Google Analytics y fallan si la app deja errores en la consola.
+
+Sigue siendo manual: todo lo de "Con cuenta" (no hay emulador de Firebase), lo que solo se ve en un
+teléfono real (segundo plano y bloqueo de verdad, Wake Lock real, que la alarma se oiga) y lo
+visual (distribución de jugadores, header).
 
 ## Manual
 

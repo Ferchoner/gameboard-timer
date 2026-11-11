@@ -60,9 +60,10 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - Mejoras grandes: flujo spec-driven. `/spec` crea la spec en `specs/` (estado Borrador) y
   `/spec-impl` implementa solo specs con estado Aprobado, en su rama `spec-NN-slug`.
   Las specs se escriben en español (`Borrador`, `En revisión`, `Aprobado`, `Implementado`, `Obsoleto`).
-- Antes de abrir un PR: `npm run build` sin errores y la checklist manual de
+- Antes de abrir un PR: `npm run build` sin errores, `npm test` en verde y la checklist manual de
   `docs/07_publicacion/CHECKLIST_PRUEBAS.md` en lo que toque el cambio. La CI
-  (`.github/workflows/ci.yml`) repite el build en cada PR.
+  (`.github/workflows/ci.yml`) repite el build, las unitarias y las E2E en cada PR.
+- Un cambio de comportamiento lleva su prueba en `tests/unit/` o `tests/e2e/`.
 - Al terminar: informa archivos modificados, pruebas hechas, riesgos y siguiente paso, y revisa
   qué documentos de `docs/` y el `README.md` quedaron desfasados.
 
@@ -73,5 +74,11 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - `npm run build` — build de producción. Con `NITRO_PRESET=github-pages` genera `.output/public`,
   igual que el deploy.
 - `npm run preview` — servir el build localmente.
+- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown` y `TimerStore`).
+- `npm run test:e2e` — pruebas E2E con Playwright (`tests/e2e/`) contra el build de producción, en
+  Chromium de escritorio y móvil emulado. Antes: `NITRO_PRESET=github-pages npm run build`. La
+  primera vez: `npx playwright install chromium`.
+- `npm test` — unitarias y E2E.
 
-No hay pruebas automáticas ni typecheck configurados.
+Las pruebas usan versiones fijas compatibles con Node 18 (`vitest@3.2.7`,
+`@playwright/test@1.61.1`). No hay typecheck ni linter configurados.
