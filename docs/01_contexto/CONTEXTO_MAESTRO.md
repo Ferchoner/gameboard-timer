@@ -53,6 +53,6 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   borrar. Implementada y fusionada en `master` (PR #3, 2026-11-11).
 - SPEC 02, reloj fiable y pantalla encendida (`specs/02-reloj-fiable.md`): tiempo con
   `Date.now()`, Wake Lock en la pantalla del timer, alarma al volver, Continuous sin trabas y
-  "Timer not found". En PR desde la rama `spec-02-reloj-fiable`.
+  "Timer not found". Implementada (PR #6), probada por Fernando en móvil el 2026-11-11.
 - Siguientes, según la revisión QA del 2026-11-11: spec 03 (pruebas automáticas) y spec 04
   (Firebase y producción). Actualizar Node y dependencias va en su propio hilo.

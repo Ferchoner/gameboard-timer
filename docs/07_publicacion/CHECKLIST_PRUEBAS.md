@@ -53,3 +53,15 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 ### Rutas en producción
 - [ ] Navegar entre `/`, `/timers`, `/timer-app/0` y `/user/signup-form` bajo `/gameboard-timer/`.
 - [ ] Recargar en `/timers` y `/user/signup-form` no da 404.
+
+## Probar en el móvil desde la compu
+
+El Wake Lock solo funciona con HTTPS (o `localhost`). Con Nuxt 3.6 en dev:
+
+```
+NODE_TLS_REJECT_UNAUTHORIZED=0 npx nuxi dev --host <IP de la compu> --https
+```
+
+Abrir `https://<IP>:3000/gameboard-timer/` en el teléfono, en la misma red, y aceptar el aviso del
+certificado autofirmado. `--host 0.0.0.0` no sirve: el servidor no puede pedirse su propio
+manifest. La variable `NODE_TLS_REJECT_UNAUTHORIZED=0` es solo para esta sesión de desarrollo.
