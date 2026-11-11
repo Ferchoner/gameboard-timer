@@ -1,6 +1,6 @@
 # SPEC 03 — Pruebas automáticas
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 01, SPEC 02
 > **Fecha:** 2026-11-11
 > **Objetivo:** Que cada PR corra en la CI pruebas unitarias y E2E que cubran el editor de timers y el reloj, para detectar regresiones antes de fusionar a `master`.
