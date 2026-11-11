@@ -37,10 +37,6 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 
 ## Pendientes
 
-- **Seguridad de Firestore:** las reglas publicadas (consola, 2026-11-11) dejan a cualquier usuario
-  con sesión leer, cambiar y borrar datos de todos (`allow read, write: if request.auth != null`).
-  La spec 04 versiona en `firestore.rules` las reglas por dueño. Falta que Fernando las publique
-  en la consola después del merge.
 - Avisos de deprecación de Sass en el build (vienen de Bootstrap 5 con `@import`). No rompen
   nada; corregirlos es otra spec.
 - Las E2E (spec 03) solo cubren el modo invitado. Las reglas se prueban con el emulador
@@ -72,5 +68,6 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   (PR #10).
 - SPEC 04, Firebase seguro y sin errores silenciosos (`specs/04-firebase-seguro.md`): reglas por
   dueño probadas con el emulador, sin `accessToken`, guardado solo con cambios, errores visibles y
-  login y registro robustos. Aprobada (Fernando, 2026-11-11). Favicons, manifest y timeout del
-  loading van en un PR aparte, sin spec (Fernando, 2026-11-11).
+  login y registro robustos. Implementada (PR #13); Fernando publicó `firestore.rules` en la consola y
+  lo probó con su cuenta en producción el 2026-11-11. Favicons, manifest y timeout del loading
+  salieron en el PR #12, sin spec (Fernando, 2026-11-11).
