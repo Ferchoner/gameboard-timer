@@ -21,17 +21,16 @@ const timerStore = useTimerStore();
           <button
               type="button"
               class="btn-close"
-              data-bs-dismiss="modal"
               aria-label="Close"
-              @click="timerStore.syncTimer(timerIndex)"
+              @click="saveTimer(timerStore)"
           />
         </div>
         <div class="modal-body px-1 mx-0">
           <div class="row px-0 mx-0">
             <div class="col-12 form-container mx-0 px-0">
-              <form action="/save-timer" @submit.stop.prevent="timerStore.syncTimer(timerIndex)" class="p-0 m-0">
+              <form action="/save-timer" @submit.stop.prevent="saveTimer(timerStore)" class="p-0 m-0">
                 <div class="row px-0 mx-0">
-                  <div v-if="formMessages" :class="`messages ${(hasErrors ? 'error' : '')}`">
+                  <div v-if="formMessages" :class="`messages text-start px-1 mb-2 ${(hasErrors ? 'error' : '')}`" role="alert">
                     <span> {{ formMessages }} </span>
                   </div>
                   <div class="px-1 mb-3 text-start">
@@ -124,9 +123,8 @@ const timerStore = useTimerStore();
         <div class="modal-footer text-end pt-0 pb-1">
           <button
               class="btn btn-primary mt-2"
-              data-bs-dismiss="modal"
-              type="submit"
-              @click="timerStore.syncTimer(timerIndex)"
+              type="button"
+              @click="saveTimer(timerStore)"
           >
             Update Timer
           </button>
@@ -142,13 +140,51 @@ export default {
   data() {
     return {
       formMessages: '',
-      hasErrors: '',
+      hasErrors: false,
       isLoading: false
     }
   },
   props: {
     modalid: String,
     timerIndex: Number
+  },
+  watch: {
+    timerIndex() {
+      this.clearMessages();
+    }
+  },
+  methods: {
+    validate(timer) {
+      const errors = [];
+      if (!String(timer.title ?? '').trim()) {
+        errors.push('Title is required');
+      }
+      timer.players.forEach((player, i) => {
+        if (!String(player.name ?? '').trim()) {
+          errors.push(`Player ${i + 1} needs a name`);
+        }
+      });
+      return errors;
+    },
+    clearMessages() {
+      this.formMessages = '';
+      this.hasErrors = false;
+    },
+    saveTimer(timerStore) {
+      const errors = this.validate(timerStore.timers[this.timerIndex]);
+      if (errors.length) {
+        // Con errores no se guarda y el modal sigue abierto
+        this.hasErrors = true;
+        this.formMessages = `${errors.join('. ')}.`;
+        return;
+      }
+      this.clearMessages();
+      timerStore.syncTimer(this.timerIndex);
+      const modalEl = document.getElementById(this.modalid);
+      if (modalEl) {
+        this.$bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+      }
+    }
   }
 }
 </script>
@@ -159,6 +195,14 @@ export default {
     .modal-content {
       .modal-body {
         .form-container {
+          .messages {
+            font-size: 12px;
+
+            &.error {
+              color: #e71313;
+            }
+          }
+
           label.players-number {
             max-width: 55px;
           }
