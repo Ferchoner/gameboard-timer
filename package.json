@@ -6,13 +6,18 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@playwright/test": "1.61.1",
     "@sidebase/nuxt-session": "^0.2.7",
     "@types/node": "^18.17.1",
-    "nuxt": "^3.6.5"
+    "nuxt": "^3.6.5",
+    "vitest": "3.2.7"
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
