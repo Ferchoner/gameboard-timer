@@ -37,6 +37,9 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 
 ## Pendientes
 
+- **Seguridad de Firestore:** las reglas publicadas (consola, 2026-11-11) dejan a cualquier usuario
+  con sesión leer, cambiar y borrar datos de todos (`allow read, write: if request.auth != null`).
+  Se corrige con la spec 04.
 - Avisos de deprecación de Sass en el build (vienen de Bootstrap 5 con `@import`). No rompen
   nada; corregirlos es otra spec.
 - Las pruebas automáticas (spec 03) solo cubren el modo invitado. Probar con cuenta requiere el
@@ -65,3 +68,7 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   Nuxt 4, Pinia 4, Firebase 13, faker 10, Vitest 5 y Playwright 1.65, solo npm con `npm ci`, y
   acciones de GitHub al día (el deploy fallaba desde antes por `upload-artifact@v3`). Implementada
   (PR #10).
+- SPEC 04, Firebase seguro y sin errores silenciosos (`specs/04-firebase-seguro.md`): reglas por
+  dueño probadas con el emulador, sin `accessToken`, guardado solo con cambios, errores visibles y
+  login y registro robustos. En borrador. Favicons, manifest y timeout del loading van en un PR
+  aparte, sin spec (Fernando, 2026-11-11).
