@@ -1,6 +1,6 @@
 # SPEC 04 — Firebase seguro y sin errores silenciosos
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 03 (pruebas) y SPEC 05 (Node 24 y Firebase 13)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Que cada usuario solo pueda leer y escribir sus propios datos en Firestore, que no se guarden tokens ni escrituras innecesarias, y que los fallos de Firebase se vean en la app en lugar de perderse.
@@ -164,20 +164,20 @@ Rama `spec-04-firebase-seguro`. Cada paso deja la app funcionando, con `npm test
 
 ## Criterios de aceptación
 
-- [ ] `NITRO_PRESET=github-pages npm run build` termina sin errores.
-- [ ] `npm test` y `npm run test:rules` pasan en local y en la CI.
-- [ ] Las pruebas de reglas demuestran que un usuario no puede leer, cambiar ni borrar `Users` ni `Timers` de otro, y que sin sesión no hay acceso.
-- [ ] Un usuario nuevo queda en `Users/{uid}` sin `accessToken`.
-- [ ] Un usuario existente que inicia sesión queda sin `accessToken` en su documento.
-- [ ] Con el timer abierto en pausa no hay escrituras a Firestore. Con el reloj corriendo sigue escribiendo como máximo cada 5 s, y al salir de la pantalla se guarda el tiempo final.
-- [ ] Si una escritura falla (por ejemplo, al negarla las reglas), aparece "Couldn't save changes. Check your connection." y la app sigue funcionando.
-- [ ] Login con contraseña incorrecta muestra "Wrong email or password.".
-- [ ] El registro con una contraseña de menos de 6 caracteres muestra el mensaje y no llama a Firebase.
-- [ ] Una cuenta sin `Users/{uid}` puede iniciar sesión, y el documento se crea.
-- [ ] Un timer referenciado que ya no existe no rompe la lista.
-- [ ] Borrar un timer quita su referencia correcta de `Users.timers`, aunque el orden local sea distinto.
-- [ ] Iniciar sesión lee `Users/{uid}` una sola vez.
-- [ ] Con las reglas nuevas publicadas, la checklist "Con cuenta" pasa en producción.
+- [x] `NITRO_PRESET=github-pages npm run build` termina sin errores.
+- [x] `npm test` y `npm run test:rules` pasan en local y en la CI.
+- [x] Las pruebas de reglas demuestran que un usuario no puede leer, cambiar ni borrar `Users` ni `Timers` de otro, y que sin sesión no hay acceso.
+- [x] Un usuario nuevo queda en `Users/{uid}` sin `accessToken`.
+- [x] Un usuario existente que inicia sesión queda sin `accessToken` en su documento.
+- [x] Con el timer abierto en pausa no hay escrituras a Firestore. Con el reloj corriendo sigue escribiendo como máximo cada 5 s, y al salir de la pantalla se guarda el tiempo final.
+- [x] Si una escritura falla (por ejemplo, al negarla las reglas), aparece "Couldn't save changes. Check your connection." y la app sigue funcionando.
+- [x] Login con contraseña incorrecta muestra "Wrong email or password.".
+- [x] El registro con una contraseña de menos de 6 caracteres muestra el mensaje y no llama a Firebase.
+- [x] Una cuenta sin `Users/{uid}` puede iniciar sesión, y el documento se crea.
+- [x] Un timer referenciado que ya no existe no rompe la lista.
+- [x] Borrar un timer quita su referencia correcta de `Users.timers`, aunque el orden local sea distinto.
+- [x] Iniciar sesión lee `Users/{uid}` una sola vez.
+- [x] Con las reglas nuevas publicadas, la checklist "Con cuenta" pasa en producción.
 
 ## Decisiones
 
