@@ -2,6 +2,9 @@ import { defineStore } from 'pinia';
 import {useUserStore} from "~/stores/UserStore";
 import { faker } from '@faker-js/faker/locale/en';
 
+export const MIN_PLAYERS = 1;
+export const MAX_PLAYERS = 12;
+
 export const useTimerStore = defineStore( 'TimerStore', {
     state: () => {
         return {
@@ -55,17 +58,22 @@ export const useTimerStore = defineStore( 'TimerStore', {
                 ])
             }
         },
+        applySharedTime(i) {
+            // Todos los jugadores comparten el tiempo del primero (invitado o con cuenta)
+            const players = this.timers[i].players;
+            const fixedTime = Number(players[0].timeValue);
+            players.forEach(player => {
+                player.timeValue = fixedTime;
+                player.currentTime = fixedTime;
+            });
+        },
         syncTimer(i) {
+            this.applySharedTime(i);
             const userStore = useUserStore();
             if (userStore.user.uid && userStore.usrChecked) { // User exists in Firesore
                 const { updateDocument } = useFirestore();
                 const frData = { ...this.timers[i] };
-                const fixedTime = this.timers[i].players[0].timeValue;
-                frData.players = this.timers[i].players.map(player => {
-                    player.timeValue = fixedTime
-                    player.currentTime = fixedTime
-                    return {...player}
-                });
+                frData.players = this.timers[i].players.map(player => ({ ...player }));
                 updateDocument('Timers', this.timers[i].FSid, frData);
             }
         },
