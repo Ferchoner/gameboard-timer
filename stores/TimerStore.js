@@ -31,11 +31,26 @@ export const useTimerStore = defineStore( 'TimerStore', {
             }
             return deletedTimer[0];
         },
-        addPlayer(timerIndex, data) {
-            return this.timers[timerIndex].players.push(new Player(data));
+        addPlayer(timerIndex) {
+            const players = this.timers[timerIndex].players;
+            if (players.length >= MAX_PLAYERS) {
+                return players.length;
+            }
+            // El jugador nuevo toma el tiempo actual del timer
+            const player = new Player();
+            if (players.length) {
+                player.timeValue = Number(players[0].timeValue);
+                player.currentTime = player.timeValue;
+            }
+            return players.push(player);
         },
-        removePlayer(timerIndex, playerIndex) {
-            return this.timers[timerIndex].players.splice(playerIndex, 1);
+        removePlayer(timerIndex) {
+            // Quita siempre al último jugador; el primero guarda el tiempo del timer
+            const players = this.timers[timerIndex].players;
+            if (players.length <= MIN_PLAYERS) {
+                return [];
+            }
+            return players.splice(players.length - 1, 1);
         },
         async syncTimers(i, userStore, dTimer) {
             const { setDocument, deleteDocument } = useFirestore();

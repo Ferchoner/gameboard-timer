@@ -1,6 +1,6 @@
 <script setup>
 import { useUserStore } from "@/stores/UserStore";
-import { useTimerStore } from "@/stores/TimerStore";
+import { useTimerStore, MIN_PLAYERS, MAX_PLAYERS } from "@/stores/TimerStore";
 const userStore = useUserStore();
 const timerStore = useTimerStore();
 </script>
@@ -47,13 +47,27 @@ const timerStore = useTimerStore();
                   <div class="col-7 mx-0 px-0">
                     <label for="timer-players" class="form-label">Players (Timer buttons)</label>
                     <div class="input-group mb-3 px-1">
-                      <span class="input-group-text material-symbols-outlined" id="basic-addon-minus" @click="timerStore.removePlayer(timerIndex)">
+                      <span
+                          :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex] <= MIN_PLAYERS ? ' is-disabled' : ''}`"
+                          id="basic-addon-minus"
+                          role="button"
+                          aria-label="Remove last player"
+                          :aria-disabled="timerStore.playersCount[timerIndex] <= MIN_PLAYERS"
+                          @click="timerStore.removePlayer(timerIndex)"
+                      >
                         remove
                       </span>
                       <label for="players" class="align-items-center d-flex form-control justify-content-center players-number text-center">
                         {{ timerStore.playersCount[timerIndex] }}
                       </label>
-                      <span class="input-group-text material-symbols-outlined" id="basic-addon-plus" @click="timerStore.addPlayer(timerIndex)">
+                      <span
+                          :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex] >= MAX_PLAYERS ? ' is-disabled' : ''}`"
+                          id="basic-addon-plus"
+                          role="button"
+                          aria-label="Add player"
+                          :aria-disabled="timerStore.playersCount[timerIndex] >= MAX_PLAYERS"
+                          @click="timerStore.addPlayer(timerIndex)"
+                      >
                         add
                       </span>
                     </div>
@@ -147,6 +161,15 @@ export default {
         .form-container {
           label.players-number {
             max-width: 55px;
+          }
+
+          .player-count-btn {
+            cursor: pointer;
+
+            &.is-disabled {
+              cursor: not-allowed;
+              opacity: 0.4;
+            }
           }
         }
       }
