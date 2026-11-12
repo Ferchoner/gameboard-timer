@@ -57,7 +57,6 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 
 ## Pendientes
 
-- `components/LoginFormComponent.vue` no se usa en ninguna pantalla.
 - El constructor de `Timer` y `Player` ignora los campos con valor falso (`if (data[key])`): un
   `progresive: false` o un `title: ''` que lleguen en los datos no se copian. Sin efecto visible hoy.
 - Avisos de deprecación de Sass en el build (vienen de Bootstrap 5 con `@import`). No rompen

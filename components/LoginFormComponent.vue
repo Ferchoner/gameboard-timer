@@ -47,9 +47,10 @@ export default {
             .then((response) => {
               if (response.user) {
                 this.isLoading = false;
-                const closeIcon = document.querySelector('.btn-close')
-                if (closeIcon) {
-                  closeIcon.dispatchEvent(new Event('click'))
+                // Cierra el modal que contiene este formulario (no el primer .btn-close de la página)
+                const modalEl = (this.$el as HTMLElement).closest('.modal');
+                if (modalEl) {
+                  this.$bootstrap.Modal.getOrCreateInstance(modalEl).hide();
                 }
                 this.formMessages = '';
                 this.creds = {

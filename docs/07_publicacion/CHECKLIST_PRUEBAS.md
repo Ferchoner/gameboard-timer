@@ -26,7 +26,7 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 | Aviso al invitado | `npm run test:e2e` (`pulido.spec.js`): sin timers no hay aviso ni confirmación; con un timer hay aviso y `beforeunload`, y cancelar no borra nada |
 | Favicons y loading | `npm run test:e2e` (`produccion.spec.js`): favicons, manifest y sus iconos responden 200 bajo `/gameboard-timer/`; si Firebase no responde en 15 s, el loading muestra el aviso con "Reload" |
 
-Las E2E corren como invitado, en Chromium de escritorio y en un Pixel 7 emulado, contra el build de
+Las E2E corren como invitado (el login usa respuestas falsas de Firebase Auth), en Chromium de escritorio y en un Pixel 7 emulado, contra el build de
 producción servido bajo `/gameboard-timer/` (`tests/e2e/serve.mjs` imita GitHub Pages, con su
 `404.html`). Fallan si la app deja errores en la consola o si pide algo a Google Fonts o a Analytics.
 
