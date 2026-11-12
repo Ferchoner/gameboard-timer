@@ -1,6 +1,6 @@
 # Timer for Friends — Contexto maestro
 
-> Estado al 2026-11-11. Documento vivo: se actualiza al cerrar cada mejora.
+> Estado al 2026-11-12. Documento vivo: se actualiza al cerrar cada mejora.
 
 ## Identidad y objetivo
 
@@ -38,6 +38,14 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
   configuración siguen en JS; los tipos de `$firestore`/`$auth` van en un `.d.ts` sin tocar el plugin;
   no se reescriben los bloques de opciones a `<script setup>`; estricto por defecto de Nuxt (spec 07,
   Fernando, 2026-11-11).
+- Auditoría técnica del 2026-11-12: orden aprobado (ajustes de Settings sin PR, SPEC 08 CI/CD,
+  SPEC 09 validación en las reglas, SPEC 10 carga más ligera); Analytics se quita en la SPEC 10
+  (Fernando, 2026-11-12).
+- CI en jobs paralelos con un check final **Build y pruebas** (el que exige el ruleset de
+  `master`), permisos mínimos, caché, acciones por SHA, Dependabot semanal, límite de 420 KB gzip
+  para el JS de entrada y reglas de Firestore publicadas por `rules.yml` con una cuenta de servicio
+  (secret `FIREBASE_SERVICE_ACCOUNT`); el deploy de la app no corre pruebas (spec 08, Fernando,
+  2026-11-12).
 
 ## Pendientes
 
@@ -87,3 +95,6 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 07, migrar a TypeScript (`specs/07-migrar-a-typescript.md`): stores, `utils` y componentes
   en TypeScript, tipos del modelo en `types/models.ts` y `npm run typecheck` en la CI, sin cambiar la
   lógica. Implementada (PR #19); Fernando la probó con su cuenta el 2026-11-11.
+- SPEC 08, CI/CD endurecida y despliegue de reglas (`specs/08-ci-cd-endurecida.md`): jobs
+  paralelos, permisos, concurrencia, caché, `npm run size`, Dependabot y `rules.yml`. Aprobada
+  por Fernando el 2026-11-12; en implementación.
