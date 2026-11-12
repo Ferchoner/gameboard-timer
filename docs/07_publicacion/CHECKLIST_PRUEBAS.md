@@ -17,7 +17,7 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 | Store (`TimerStore`) | `npm run test:unit`: límites de 1 y 12 jugadores, "−" quita al último, tiempo común como número, índice en rango, Firestore solo con sesión, guardado del reloj solo con cambios, borrar quita la referencia por id, aviso si falla una escritura |
 | Sesión (`UserStore`) | `npm run test:unit`, con Firebase simulado: registro sin `accessToken`, se borra al iniciar sesión, cuenta sin documento se repara, timers borrados se ignoran, una sola carga por login |
 | Mensajes de login y registro | `npm run test:unit` (`authErrors.spec.js`) y `npm run test:e2e` (`cuenta.spec.js`): contraseña de menos de 6 caracteres sin llamar a Firebase |
-| Reglas de Firestore | `npm run test:rules` (emulador, necesita Java 21+): cada usuario solo lo suyo, sin sesión nada, otras colecciones negadas |
+| Reglas de Firestore | `npm run test:rules` (emulador, necesita Java 21+): cada usuario solo lo suyo, sin sesión nada, otras colecciones negadas; cada documento que escribe la app pasa y los campos extra, faltantes, de otro tipo o fuera de tamaño se rechazan (SPEC 09) |
 | Editor como invitado | `npm run test:e2e` (`editor.spec.js`): crear, tiempo común y reinicio, "+" y "−", límites, validaciones con "Update Timer" y la X, confirmación al borrar, borrar el último timer editado |
 | Timer en marcha | `npm run test:e2e` (`reloj.spec.js`), con reloj y visibilidad simulados: modo normal, Continuous con jugadores en 0, todos en 0, alarma al volver de segundo plano, Wake Lock al entrar y salir |
 | Rutas en producción | `npm run test:e2e` (`rutas.spec.js`): recargar `/timers` y `/user/signup-form`, "Timer not found" en `/timer-app/0` y `/timer-app/abc` |
