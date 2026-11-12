@@ -1,6 +1,6 @@
 # SPEC 09 — Reglas de Firestore que validan los datos
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 04 (`firestore.rules` por dueño y `npm run test:rules`) y SPEC 08 (`rules.yml` publica las reglas tras el merge)
 > **Fecha:** 2026-11-12
 > **Objetivo:** Que `firestore.rules` solo acepte documentos `Users` y `Timers` con los campos, tipos y tamaños que escribe la app, y que los ids nuevos de timer sean difíciles de repetir.
