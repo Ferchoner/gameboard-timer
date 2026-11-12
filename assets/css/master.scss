@@ -1,4 +1,28 @@
-@import "bootstrap/scss/bootstrap";
+// Bootstrap 5: solo las partes que usa la app (SPEC 10). Mismo orden que bootstrap/scss/bootstrap.scss.
+// Si una pantalla nueva usa otro componente (por ejemplo nav, badge o dropdown), agregar su import aquí.
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/modal";
+
+@import "bootstrap/scss/helpers";
+@import "bootstrap/scss/utilities/api";
+
 @import "icons";
 @import "fonts";
 
