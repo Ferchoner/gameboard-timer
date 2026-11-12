@@ -2,7 +2,7 @@ import { test as base, expect } from '@playwright/test'
 
 // Errores de consola que no vienen de la app: recursos que no cargan (Firebase sin red).
 // Cualquier otro error de consola o excepción hace fallar la prueba.
-const IGNORED_CONSOLE = [/^Failed to load resource/]
+const IGNORED_CONSOLE = [/^Failed to load resource/, /@firebase\/firestore: .*Could not reach Cloud Firestore backend/]
 
 export const test = base.extend({
     page: async ({ page }, use) => {
