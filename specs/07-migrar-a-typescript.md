@@ -1,6 +1,6 @@
 # SPEC 07 — Migrar la app a TypeScript
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 05 (Nuxt 4) y SPEC 06 (último cambio a los componentes)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Pasar los stores, `utils` y componentes de JavaScript a TypeScript, con un typecheck en la CI y sin cambiar lo que hace la app.
