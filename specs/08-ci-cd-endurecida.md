@@ -1,6 +1,6 @@
 # SPEC 08 — CI/CD endurecida, más rápida y con despliegue de reglas
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 03 (pruebas en la CI), SPEC 04 (`firestore.rules` y `npm run test:rules`) y SPEC 07 (typecheck en la CI)
 > **Fecha:** 2026-11-12
 > **Objetivo:** Que los workflows tengan permisos mínimos, corran más rápido en paralelo, se mantengan al día solos y publiquen `firestore.rules` automáticamente tras el merge.
