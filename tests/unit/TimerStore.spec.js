@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useTimerStore, Timer, Player, MIN_PLAYERS, MAX_PLAYERS, timerKey } from '~/stores/TimerStore'
 import { useUserStore } from '~/stores/UserStore'
+import { PLAYER_NAMES } from '~/utils/randomPlayer'
 import { useMainStore } from '~/stores/MainStore'
 
 // useFirestore es un auto-import de Nuxt: en Vitest se simula como global
@@ -28,6 +29,12 @@ describe('Timer y Player', () => {
         expect(player.currentTime).toBe(25)
         expect(player.name).toBeTruthy()
         expect(player.color).toBeTruthy()
+    })
+
+    it('un Player nuevo tiene un nombre de la lista y un color hex (SPEC 10)', () => {
+        const player = new Player()
+        expect(PLAYER_NAMES).toContain(player.name)
+        expect(player.color).toMatch(/^#[0-9a-f]{6}$/)
     })
 
     it('un Timer creado con un título tiene 2 jugadores', () => {

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import {useUserStore} from "~/stores/UserStore";
 import { guardWrite } from "~/stores/MainStore";
-import { faker } from '@faker-js/faker/locale/en';
+import { randomName, randomColor } from '~/utils/randomPlayer';
 import type { TimerData, PlayerData } from '~/types/models';
 
 type UserStore = ReturnType<typeof useUserStore>;
@@ -174,8 +174,8 @@ export const Player = class implements PlayerData {
         if (!data) {
             this.timeValue = 25;
             this.currentTime = 25;
-            this.name = faker.person.firstName();
-            this.color = faker.color.rgb();
+            this.name = randomName();
+            this.color = randomColor();
         }
         if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
             const fields = data as Record<string, unknown>;
@@ -186,13 +186,13 @@ export const Player = class implements PlayerData {
             }
         } else if (typeof data === 'string') {
             this.name = data;
-            this.color = faker.color.rgb();
+            this.color = randomColor();
             this.timeValue = 25;
             this.currentTime = 25;
         } else if (typeof data === 'number') {
             this.timeValue = data;
-            this.name = faker.person.fullName();
-            this.color = faker.color.rgb();
+            this.name = randomName();
+            this.color = randomColor();
             this.currentTime = 25;
         }
     }
