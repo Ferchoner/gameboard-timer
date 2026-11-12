@@ -27,7 +27,7 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 
 - `docs/01_contexto/CONTEXTO_MAESTRO.md` — qué es, decisiones aprobadas, pendientes y mejoras.
 - `docs/02_diseno/FUNCIONALIDAD_ACTUAL.md` — rutas, flujos y modelo de datos de Firestore.
-- `docs/03_recursos/RECURSOS_Y_LICENCIAS.md` — audio, imágenes e iconos y su origen.
+- `docs/03_recursos/RECURSOS_Y_LICENCIAS.md` — audio, imágenes, iconos y fuentes, y su origen.
 - `docs/06_prompts_IA/REGLAS_DE_TRABAJO_IA.md` — reglas y ciclo de una mejora.
 - `docs/07_publicacion/` — cómo se despliega y checklist de pruebas manuales.
 - `specs/` — specs de mejoras (flujo `/spec` → `/spec-impl`).
@@ -60,7 +60,10 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - `types/` — `models.ts` (documentos de Firestore: `TimerData`, `PlayerData`, `UserData`),
   `stores.ts` (tipos de los stores) y `.d.ts` de `$firestore`, `$auth`, `$bootstrap` y Bootstrap.
 - `plugins/` — `firebase.client.ts` (inicializa Firebase) y `useBootstrap.client.ts`.
-- `assets/` — `css/master.scss` (importa Bootstrap por partes, `_icons.scss` y `_fonts.scss`), `audio/time_over.mp3`, `images/`, `fonts/`. `public/` — favicons y manifest.
+- `utils/` — `authErrors.ts` (mensajes de login y registro) y `randomPlayer.ts` (nombre y color de
+  un jugador nuevo).
+- `assets/` — `css/master.scss` (importa Bootstrap por partes, `_icons.scss` y `_fonts.scss`),
+  `audio/time_over.mp3`, `images/`, `fonts/`. `public/` — favicons y manifest.
 
 ## Forma de trabajar
 
@@ -68,15 +71,15 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - Mejoras grandes: flujo spec-driven. `/spec` crea la spec en `specs/` (estado Borrador) y
   `/spec-impl` implementa solo specs con estado Aprobado, en su rama `spec-NN-slug`.
   Las specs se escriben en español (`Borrador`, `En revisión`, `Aprobado`, `Implementado`, `Obsoleto`).
-- Antes de abrir un PR: `npm run build` y `npm run typecheck` sin errores, `npm test` en verde y la checklist manual de
-  `docs/07_publicacion/CHECKLIST_PRUEBAS.md` en lo que toque el cambio. La CI
+- Antes de abrir un PR: `npm run build` y `npm run typecheck` sin errores, `npm test` en verde y la
+  checklist manual de `docs/07_publicacion/CHECKLIST_PRUEBAS.md` en lo que toque el cambio. La CI
   (`.github/workflows/ci.yml`) repite el build, el typecheck, las unitarias, las reglas, el tamaño
   del JS y las E2E en cada PR, en jobs paralelos. El check que exige el ruleset de `master` es
   **Build y pruebas**: no cambiarle el nombre (SPEC 08).
 - Workflows: `ci.yml` (cada PR), `main.yml` (publica la app en cada push a `master`) y `rules.yml`
   (publica `firestore.rules` cuando cambian en `master`). Dependabot (`.github/dependabot.yml`)
-  abre PRs de actualización cada lunes. Las acciones van fijadas por SHA con la versión en un
-  comentario.
+  abre PRs de actualización cada lunes (sin versiones mayores de TypeScript: vue-tsc no soporta la
+  7). Las acciones van fijadas por SHA con la versión en un comentario.
 - Un cambio de comportamiento lleva su prueba en `tests/unit/` o `tests/e2e/`.
 - Al terminar: informa archivos modificados, pruebas hechas, riesgos y siguiente paso, y revisa
   qué documentos de `docs/` y el `README.md` quedaron desfasados.
@@ -91,8 +94,8 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - `npm run preview` — servir el build localmente.
 - `npm run typecheck` — revisa los tipos de los `.ts` y `.vue` con `vue-tsc` (`nuxi typecheck`).
   Debe terminar sin errores y sin `@ts-ignore` nuevos.
-- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `useAutoSave`, `TimerStore`,
-  `UserStore`, `randomPlayer`, `authErrors` e `icons`).
+- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `useAutoSave`,
+  `TimerStore`, `UserStore`, `randomPlayer`, `authErrors` e `icons`).
 - `npm run test:e2e` — pruebas E2E con Playwright (`tests/e2e/`) contra el build de producción, en
   Chromium de escritorio y móvil emulado. Antes: `NITRO_PRESET=github-pages npm run build`. La
   primera vez: `npx playwright install chromium`.

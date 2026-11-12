@@ -16,7 +16,9 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 | Reloj (`useCountdown`) | `npm run test:unit`: inicio, pausa, tiempo real sin intervalos, aviso único al llegar a 0, reinicios, sin intervalos tras `dispose` |
 | Store (`TimerStore`) | `npm run test:unit`: límites de 1 y 12 jugadores, "−" quita al último, tiempo común como número, índice en rango, Firestore solo con sesión, guardado del reloj solo con cambios, borrar quita la referencia por id, aviso si falla una escritura |
 | Sesión (`UserStore`) | `npm run test:unit`, con Firebase simulado: registro sin `accessToken`, se borra al iniciar sesión, cuenta sin documento se repara, timers borrados se ignoran, una sola carga por login |
-| Mensajes de login y registro | `npm run test:unit` (`authErrors.spec.js`) y `npm run test:e2e` (`cuenta.spec.js`): contraseña de menos de 6 caracteres sin llamar a Firebase |
+| Mensajes de login y registro | `npm run test:unit` (`authErrors.spec.js`) y `npm run test:e2e` (`cuenta.spec.js`): contraseña de menos de 6 caracteres sin llamar a Firebase; con Firebase Auth simulado, el login cierra su modal y su fondo |
+| Guardado del timer (`useAutoSave`) | `npm run test:unit`: guarda cada 15 s (no antes), al pausar un jugador y al pausar todos (Continuous) |
+| Jugadores nuevos (`randomPlayer`) | `npm run test:unit`: nombre de la lista y color `#rrggbb` |
 | Reglas de Firestore | `npm run test:rules` (emulador, necesita Java 21+): cada usuario solo lo suyo, sin sesión nada, otras colecciones negadas; cada documento que escribe la app pasa y los campos extra, faltantes, de otro tipo o fuera de tamaño se rechazan (SPEC 09) |
 | Editor como invitado | `npm run test:e2e` (`editor.spec.js`): crear, tiempo común y reinicio, "+" y "−", límites, validaciones con "Update Timer" y la X, confirmación al borrar, borrar el último timer editado |
 | Timer en marcha | `npm run test:e2e` (`reloj.spec.js`), con reloj y visibilidad simulados: modo normal, Continuous con jugadores en 0, todos en 0, alarma al volver de segundo plano, Wake Lock al entrar y salir |
@@ -25,13 +27,15 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 | Accesibilidad y nombres largos | `npm run test:e2e` (`pulido.spec.js`): nombre accesible en los botones de la lista, cada etiqueta apunta a su campo, nombre de 20 caracteres como máximo, con 12 jugadores ningún nombre se sale de su tarjeta |
 | Aviso al invitado | `npm run test:e2e` (`pulido.spec.js`): sin timers no hay aviso ni confirmación; con un timer hay aviso y `beforeunload`, y cancelar no borra nada |
 | Favicons y loading | `npm run test:e2e` (`produccion.spec.js`): favicons, manifest y sus iconos responden 200 bajo `/gameboard-timer/`; si Firebase no responde en 15 s, el loading muestra el aviso con "Reload" |
+| Sin pedidos externos | `npm run test:e2e` (`produccion.spec.js`): nada a Google Fonts ni a Analytics, y Handjet carga desde el sitio (SPEC 10) |
 
-Las E2E corren como invitado (el login usa respuestas falsas de Firebase Auth), en Chromium de escritorio y en un Pixel 7 emulado, contra el build de
-producción servido bajo `/gameboard-timer/` (`tests/e2e/serve.mjs` imita GitHub Pages, con su
-`404.html`). Fallan si la app deja errores en la consola o si pide algo a Google Fonts o a Analytics.
+Las E2E corren como invitado (el login usa respuestas falsas de Firebase Auth), en Chromium de
+escritorio y en un Pixel 7 emulado, contra el build de producción servido bajo `/gameboard-timer/`
+(`tests/e2e/serve.mjs` imita GitHub Pages, con su `404.html`). Fallan si la app deja errores en la
+consola o si pide algo a Google Fonts o a Analytics.
 
-Sigue siendo manual: el flujo "Con cuenta" de punta a punta (la app no apunta al emulador), lo que solo se ve en un
-teléfono real (segundo plano y bloqueo de verdad, Wake Lock real, que la alarma se oiga) y lo
+Sigue siendo manual: el flujo "Con cuenta" de punta a punta (la app no apunta al emulador), lo que
+solo se ve en un teléfono real (segundo plano y bloqueo de verdad, Wake Lock real, que la alarma se oiga) y lo
 visual (distribución de jugadores, header).
 
 ## Manual
@@ -79,8 +83,8 @@ visual (distribución de jugadores, header).
 - [ ] Un usuario nuevo queda en `Users/{uid}` sin `accessToken`; uno viejo lo pierde al iniciar sesión.
 - [ ] Login con contraseña incorrecta muestra "Wrong email or password.".
 - [ ] Registro con un email que ya existe muestra "That email already has an account.".
-- [ ] Con el timer abierto en pausa no hay escrituras (pestaña Network o uso de Firestore); al
-  salir de la pantalla se guarda el tiempo final.
+- [ ] Con el timer corriendo se guarda cada 15 s y al pausar; en pausa no hay escrituras (pestaña
+  Network o uso de Firestore); al salir de la pantalla se guarda el tiempo final.
 - [ ] Con las reglas nuevas publicadas: crear, editar, jugar y borrar timers funciona, y no
   aparece "Couldn't save changes".
 
