@@ -9,6 +9,21 @@ type UserStore = ReturnType<typeof useUserStore>;
 export const MIN_PLAYERS = 1;
 export const MAX_PLAYERS = 12;
 export const MAX_NAME_LENGTH = 20; // caracteres por nombre de jugador en el editor
+export const MAX_TITLE_LENGTH = 40; // caracteres del título; firestore.rules exige lo mismo (SPEC 09)
+export const TIMER_KEY_LENGTH = 20; // caracteres aleatorios del id tras `${uid}-` (SPEC 09)
+
+const KEY_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+// Parte aleatoria del id de un timer: con 62^20 combinaciones, setDoc no pisa otro timer
+export function timerKey(length: number = TIMER_KEY_LENGTH): string {
+    const bytes = crypto.getRandomValues(new Uint8Array(length));
+    // 248 es el mayor múltiplo de 62 que cabe en un byte: se descartan los bytes de arriba para no sesgar
+    let key = '';
+    for (const byte of bytes) {
+        if (byte < 248) key += KEY_CHARS[byte % 62];
+    }
+    return key.length === length ? key : key + timerKey(length - key.length);
+}
 
 export const useTimerStore = defineStore( 'TimerStore', {
     state: () => {
@@ -64,7 +79,7 @@ export const useTimerStore = defineStore( 'TimerStore', {
         },
         async syncTimers(i: number, userStore: UserStore, dTimer?: TimerData) {
             const { setDocument, deleteDocument } = useFirestore();
-            const key = faker.string.alphanumeric(5);
+            const key = timerKey();
 
             if (!dTimer) {
                 this.timers[i]!.FSid = `${userStore.user.uid}-${key}`;
