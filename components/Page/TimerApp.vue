@@ -22,10 +22,12 @@ const notFound = computed(() => userStore.usrChecked && !timer.value);
 
 const countdown = useCountdown();
 const wakeLock = useWakeLock();
+const autoSave = useAutoSave(countdown, () => players.value.length, (timeValues) => {
+  if (timer.value) timerStore.syncTimeValues(timerIndex, timeValues);
+});
 const current = ref(0);
 const alarmPending = ref(false);
 const timeOverAudio = ref<HTMLAudioElement | null>(null);
-let synchronizer: ReturnType<typeof setInterval> | null = null;
 
 const isPlaying = computed(() => countdown.anyRunning());
 
@@ -40,22 +42,13 @@ watch(timer, (t) => {
   if (!t || initialized) return;
   initialized = true;
   countdown.init(t.players.map(player => Number(player.currentTime)));
-  startSync();
+  autoSave.start();
 }, { immediate: true });
-
-function startSync() {
-  if (synchronizer) return;
-  synchronizer = setInterval(() => {
-    if (!timer.value) return;
-    const timeValues = players.value.map((_, i) => countdown.centisecondsNow(i));
-    timerStore.syncTimeValues(timerIndex, timeValues);
-  }, 5000);
-}
 
 // Modo normal
 function togglePlayer(i: number) {
   if (countdown.isRunning(i)) {
-    countdown.pause(i);
+    autoSave.pause(i);
   } else {
     countdown.start(i);
   }
@@ -88,7 +81,7 @@ function playContinuous() {
 }
 
 function nextContinuous() {
-  countdown.pauseAll();
+  autoSave.pauseAll();
   const next = nextWithTime(current.value);
   if (next >= 0) {
     current.value = next;
@@ -97,7 +90,7 @@ function nextContinuous() {
 }
 
 function pauseContinuous() {
-  countdown.pauseAll();
+  autoSave.pauseAll();
 }
 
 function resetAll() {
@@ -140,12 +133,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange);
-  clearInterval(synchronizer ?? undefined);
-  synchronizer = null;
+  autoSave.stop();
   // Guarda los tiempos finales al salir (no escribe si no cambiaron)
-  if (timer.value) {
-    timerStore.syncTimeValues(timerIndex, players.value.map((_, i) => countdown.centisecondsNow(i)));
-  }
+  autoSave.saveNow();
   countdown.dispose();
   wakeLock.release();
 });

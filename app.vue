@@ -4,11 +4,10 @@ import { useMainStore } from "~/stores/MainStore";
 import { useTimerStore } from "~/stores/TimerStore";
 import IsLoadingComponent from "./components/IsLoadingComponent.vue";
 const userStore = useUserStore();
-const mainStore = useMainStore();
 </script>
 
 <template>
-  <div :class="'the-container d-flex flex-column' + (isTA ? ' black-bg' : '')" @click.once="() => restoreSessionData(userStore, mainStore)">
+  <div :class="'the-container d-flex flex-column' + (isTA ? ' black-bg' : '')">
     <HeaderComponent v-if="!isTA" />
     <LightHeader v-if="isTA" />
     <!-- Contenedor fijo para la página: con Nuxt 4, los v-if de header y footer junto a la
@@ -58,23 +57,16 @@ export default {
         this.loadingFailed = true;
       }
     }, LOADING_TIMEOUT_MS);
-    const mainC = document.querySelector('.the-container')
-    if (mainC) {
-      mainC.dispatchEvent(new Event('click'))
-    }
+    this.restoreSessionData(useUserStore(), useMainStore());
   },
   methods: {
-    async restoreSessionData(userStore: UserStore, mainStore: MainStore) {
-      const checker = setInterval(() => {
-        // checkFirebaseAuth y checkFirestore son async: la condición siempre es verdadera (pendiente en
-        // CONTEXTO_MAESTRO.md). SPEC 07 solo agrega tipos y no cambia este comportamiento.
-        // @ts-expect-error TS2801: promesa usada como condición
-        if (mainStore && mainStore.checkFirebaseAuth() && mainStore.checkFirestore()) {
-          clearInterval(checker);
-          userStore.listenAuth()
-          this.isLoadingData = false
-        }
-      }, 5);
+    // El plugin firebase.client.ts corre antes de montar la app: aquí $auth y $firestore ya existen.
+    // Si faltaran, el loading se queda y a los 15 s ofrece recargar (SPEC 10, antes un sondeo de 5 ms).
+    restoreSessionData(userStore: UserStore, mainStore: MainStore) {
+      if (mainStore.checkFirebaseAuth() && mainStore.checkFirestore()) {
+        userStore.listenAuth();
+        this.isLoadingData = false;
+      }
     }
   }
 }

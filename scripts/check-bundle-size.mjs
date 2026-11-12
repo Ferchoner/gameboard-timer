@@ -5,8 +5,9 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { gzipSync } from 'node:zlib'
 
-// Límite en KB gzip. La SPEC 10 lo baja cuando quite faker.
-const LIMIT_KB = 420
+// Límite en KB gzip: lo medido tras la SPEC 10 (208,1 KB) más un 10 %, redondeado hacia arriba.
+// Antes de la SPEC 10 era 420 KB (con faker, Bootstrap JS completo y Analytics).
+const LIMIT_KB = 229
 
 const publicDir = join(process.cwd(), '.output', 'public')
 const html = readFileSync(join(publicDir, 'index.html'), 'utf8')

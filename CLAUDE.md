@@ -13,10 +13,13 @@ GitHub Pages; el trabajo actual es de **mejoras y ajustes**.
 
 ## Stack
 
-Nuxt 4 (Vue 3) + Pinia + Bootstrap 5 + SCSS + Firebase 13 (Auth, Firestore, Analytics), con Node 24
+Nuxt 4 (Vue 3) + Pinia + Bootstrap 5 + SCSS + Firebase 13 (Auth, Firestore), con Node 24
 (`.nvmrc`). Gestor de paquetes: solo npm. TypeScript en stores, composables, `utils` y componentes
 (`lang="ts"`), revisado con `vue-tsc`; las pruebas y los archivos de configuración siguen en JS.
-Iconos: Material Symbols, subconjunto servido desde `assets/fonts/` (ver `RECURSOS_Y_LICENCIAS.md`). Git/GitHub, deploy con GitHub Actions a GitHub Pages.
+Iconos (Material Symbols) y fuentes de texto (Handjet, Khand) servidos desde `assets/fonts/`, sin
+Google Fonts (ver `RECURSOS_Y_LICENCIAS.md`). Bootstrap entra por partes: en `master.scss` solo los
+componentes SCSS usados y en JS solo `Modal` (`plugins/useBootstrap.client.ts`). Git/GitHub,
+deploy con GitHub Actions a GitHub Pages.
 
 ## Fuente de verdad (leer antes de trabajar)
 
@@ -52,11 +55,12 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
   `components/` — piezas reutilizables (header, footer, modal de timer, login, loading).
 - `stores/` (Pinia) — `TimerStore.ts` (timers, jugadores y sincronización con Firestore, clases
   `Timer` y `Player`), `UserStore.ts` (sesión y usuario), `MainStore.ts` (Firebase listo).
-- `composables/` — `useFirebaseAuth.ts` y `useFirestore.ts`, envoltorios finos sobre Firebase.
+- `composables/` — `useFirebaseAuth.ts` y `useFirestore.ts`, envoltorios finos sobre Firebase;
+  `useCountdown.ts` (reloj), `useAutoSave.ts` (guardado cada 15 s y al pausar) y `useWakeLock.ts`.
 - `types/` — `models.ts` (documentos de Firestore: `TimerData`, `PlayerData`, `UserData`),
   `stores.ts` (tipos de los stores) y `.d.ts` de `$firestore`, `$auth`, `$bootstrap` y Bootstrap.
 - `plugins/` — `firebase.client.ts` (inicializa Firebase) y `useBootstrap.client.ts`.
-- `assets/` — `css/master.scss` (importa `_icons.scss`), `audio/time_over.mp3`, `images/`, `fonts/`. `public/` — favicons y manifest.
+- `assets/` — `css/master.scss` (importa Bootstrap por partes, `_icons.scss` y `_fonts.scss`), `audio/time_over.mp3`, `images/`, `fonts/`. `public/` — favicons y manifest.
 
 ## Forma de trabajar
 
@@ -87,13 +91,13 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - `npm run preview` — servir el build localmente.
 - `npm run typecheck` — revisa los tipos de los `.ts` y `.vue` con `vue-tsc` (`nuxi typecheck`).
   Debe terminar sin errores y sin `@ts-ignore` nuevos.
-- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `TimerStore`, `UserStore`,
-  `authErrors` e `icons`).
+- `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `useAutoSave`, `TimerStore`,
+  `UserStore`, `randomPlayer`, `authErrors` e `icons`).
 - `npm run test:e2e` — pruebas E2E con Playwright (`tests/e2e/`) contra el build de producción, en
   Chromium de escritorio y móvil emulado. Antes: `NITRO_PRESET=github-pages npm run build`. La
   primera vez: `npx playwright install chromium`.
 - `npm test` — unitarias y E2E.
-- `npm run size` — falla si el JavaScript de entrada del build pasa de 420 KB gzip
+- `npm run size` — falla si el JavaScript de entrada del build pasa de 229 KB gzip
   (`scripts/check-bundle-size.mjs`). Antes: `NITRO_PRESET=github-pages npm run build`.
 - `npm run test:rules` — pruebas de `firestore.rules` con el emulador de Firestore
   (`tests/rules/`). Necesita Java 21 o posterior; la CI lo instala. Las reglas se publican solas

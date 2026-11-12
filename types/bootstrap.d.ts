@@ -1,2 +1,2 @@
-// El bundle de Bootstrap no trae tipos; plugins/useBootstrap.client.ts solo lo provee.
-declare module 'bootstrap/dist/js/bootstrap.bundle'
+// Bootstrap no trae tipos; plugins/useBootstrap.client.ts solo usa el módulo Modal (SPEC 10).
+declare module 'bootstrap/js/dist/modal'

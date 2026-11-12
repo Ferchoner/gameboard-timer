@@ -9,12 +9,12 @@ export const useMainStore = defineStore( 'MainStore', {
         }
     },
     actions: {
-        async checkFirebaseAuth() {
+        checkFirebaseAuth(): boolean {
             const { isReady } = useFirebaseAuth(); // auto-imported
             this.isFirebaseAuthReady = isReady();
             return this.isFirebaseAuthReady;
         },
-        async checkFirestore() {
+        checkFirestore(): boolean {
             const { isReady } = useFirestore(); // auto-imported
             this.isFirestoreReady = isReady();
             return this.isFirestoreReady;

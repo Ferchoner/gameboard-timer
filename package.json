@@ -26,7 +26,6 @@
     "vue-tsc": "3.3.14"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.6.0",
     "@pinia/nuxt": "^1.0.3",
     "bootstrap": "^5.3.8",
     "firebase": "^13.2.0",
