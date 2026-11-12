@@ -18,7 +18,7 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 
 ## Flujos
 
-### Arranque y sesión (`app.vue`, `stores/UserStore.js`)
+### Arranque y sesión (`app.vue`, `stores/UserStore.ts`)
 
 1. `app.vue` espera a que Firebase Auth y Firestore estén listos (`MainStore`) y llama a
    `userStore.listenAuth()`.
@@ -37,7 +37,7 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 - Login: modal en el header (`LoginFormComponent`), email y contraseña.
 - Registro (`UserRegisterForm`): valida que la contraseña tenga al menos 6 caracteres, crea el
   usuario en Auth, escribe `Users/{uid}` (sin token) y pone `displayName` con nombre y apellido.
-- Los errores de login y registro se traducen a mensajes en inglés (`utils/authErrors.js`), por
+- Los errores de login y registro se traducen a mensajes en inglés (`utils/authErrors.ts`), por
   ejemplo "Wrong email or password."; un código desconocido muestra "Something went wrong. Try
   again.".
 - Logout: botón del header; el listener de Auth limpia usuario y timers.
@@ -56,7 +56,7 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
   slider sobre `players[0].timeValue`, guardado como número) y nombre y color de cada jugador.
   El nombre admite hasta 20 caracteres (`MAX_NAME_LENGTH`); en la pantalla del timer, un nombre
   que no cabe en su tarjeta se corta con "…" (también los más largos guardados antes).
-- Jugadores: de 1 a 12 (`MIN_PLAYERS` y `MAX_PLAYERS` en `TimerStore.js`). "+" agrega un jugador
+- Jugadores: de 1 a 12 (`MIN_PLAYERS` y `MAX_PLAYERS` en `TimerStore.ts`). "+" agrega un jugador
   con el tiempo actual del timer; "−" quita al último. Cada botón se desactiva en su límite.
 - Guardar ("Update Timer", la X o Enter) valida que el título y los nombres no estén vacíos. Con
   errores no guarda, el modal sigue abierto y muestra `Title is required` o
@@ -121,7 +121,7 @@ Proyecto Firebase `timer-42311`. **No cambiar sin una spec aprobada.**
 }
 ```
 
-Escrituras (`stores/TimerStore.js`):
+Escrituras (`stores/TimerStore.ts`):
 
 - `addTimer` → `setDocument('Timers', FSid)` y agrega la referencia a `Users/{uid}.timers`.
 - `removeTimer` → `deleteDocument('Timers', FSid)` y quita la referencia de `Users/{uid}.timers`
@@ -131,7 +131,7 @@ Escrituras (`stores/TimerStore.js`):
 - `syncTimeValues` → `updateDocument` solo de `players` con el `currentTime` actual, y solo si
   algún tiempo cambió respecto al guardado. `TimerApp` lo llama cada 5 s y al salir de la
   pantalla, así que en pausa no escribe.
-- Si una escritura falla, no se lanza el error: `guardWrite` (`stores/MainStore.js`) muestra el
+- Si una escritura falla, no se lanza el error: `guardWrite` (`stores/MainStore.ts`) muestra el
   aviso "Couldn't save changes. Check your connection." (`SaveErrorToast`), que se cierra con su X.
 
 ### Reglas de seguridad (`firestore.rules`)
@@ -140,4 +140,4 @@ Cada usuario con sesión solo lee y escribe su `Users/{uid}` y los `Timers/{id}`
 `{uid}-`. Lo demás queda negado. Se prueban con `npm run test:rules` y se publican a mano (ver
 `docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
 
-Las clases `Timer` y `Player` (en `TimerStore.js`) definen los valores por defecto.
+Las clases `Timer` y `Player` (en `TimerStore.ts`) definen los valores por defecto.
