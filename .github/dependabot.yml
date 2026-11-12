@@ -1,0 +1,28 @@
+# Dependabot (SPEC 08): revisa cada lunes las dependencias de npm y las acciones de GitHub.
+# Menores y parches van juntos en un PR por ecosistema; cada versión mayor, en su propio PR.
+# Los PRs de Dependabot pasan por la misma CI y Fernando decide el merge.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      npm-menores:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      acciones-menores:
+        update-types:
+          - minor
+          - patch
