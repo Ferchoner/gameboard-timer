@@ -1,6 +1,6 @@
 # SPEC 10 — Carga más ligera
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 06 (iconos locales), SPEC 08 (`npm run size` en la CI) y SPEC 09 (id de timer sin faker)
 > **Fecha:** 2026-11-12
 > **Objetivo:** Bajar lo que descarga la app en la primera visita, sin faker, Analytics ni Bootstrap completo, con fuentes locales y menos escrituras, sin cambiar lo que ve el usuario.

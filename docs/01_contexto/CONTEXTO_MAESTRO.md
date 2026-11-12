@@ -110,4 +110,5 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 10, carga más ligera (`specs/10-carga-ligera.md`): sin faker, sin Analytics, Bootstrap JS
   solo con `Modal` y SCSS por partes, fuentes Handjet y Khand locales, arranque sin sondeo y guardado
   cada 15 s y al pausar. JS de entrada de 381 a 208 KB gzip (límite de `npm run size`: 229 KB) y CSS
-  de 35,6 a 25,7 KB gzip. Aprobada por Fernando el 2026-11-12; en implementación.
+  de 35,6 a 25,7 KB gzip. Implementada (PR #30); Fernando la probó con una cuenta en producción
+  (registro, crear, editar, jugar, pausar y borrar) el 2026-11-12.
