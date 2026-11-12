@@ -1,6 +1,6 @@
 # SPEC 07 — Migrar la app a TypeScript
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** SPEC 05 (Nuxt 4) y SPEC 06 (último cambio a los componentes)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Pasar los stores, `utils` y componentes de JavaScript a TypeScript, con un typecheck en la CI y sin cambiar lo que hace la app.
@@ -137,10 +137,10 @@ Rama `spec-07-migrar-a-typescript`, creada desde `master`. Un commit por paso; c
 ## Decisiones
 
 - **Sí:** migrar a TypeScript en una spec propia (Fernando, 2026-11-11).
-- **Propuesta (por confirmar):** tipar `$firestore` y `$auth` con un `.d.ts` y no tocar `plugins/firebase.client.ts`. La otra opción, que el plugin devuelva `provide`, es más limpia pero cambia un archivo que necesita aprobación.
-- **Propuesta (por confirmar):** las pruebas y los archivos de configuración se quedan en JavaScript. Ya funcionan y no aportan tipos nuevos.
-- **Propuesta (por confirmar):** no reescribir los bloques de opciones a `<script setup>`. Solo se agregan tipos, para que el diff sea de tipos y no de lógica.
-- **Propuesta (por confirmar):** usar el nivel de estricto del `tsconfig` de Nuxt, sin reglas extra.
+- **Sí:** tipar `$firestore` y `$auth` con un `.d.ts` y no tocar `plugins/firebase.client.ts`. La otra opción, que el plugin devuelva `provide`, es más limpia pero cambia un archivo que necesita aprobación (Fernando, 2026-11-11).
+- **Sí:** las pruebas y los archivos de configuración se quedan en JavaScript. Ya funcionan y no aportan tipos nuevos (Fernando, 2026-11-11).
+- **Sí:** no reescribir los bloques de opciones a `<script setup>`. Solo se agregan tipos, para que el diff sea de tipos y no de lógica (Fernando, 2026-11-11).
+- **Sí:** usar el nivel de estricto del `tsconfig` de Nuxt, sin reglas extra (Fernando, 2026-11-11).
 - **No:** validar en tiempo de ejecución lo que llega de Firestore. Cambiaría el comportamiento con datos reales.
 - **No:** arreglar rarezas que salgan al tipar. Se anotan como pendientes.
 
