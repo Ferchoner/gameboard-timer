@@ -96,5 +96,5 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   en TypeScript, tipos del modelo en `types/models.ts` y `npm run typecheck` en la CI, sin cambiar la
   lógica. Implementada (PR #19); Fernando la probó con su cuenta el 2026-11-11.
 - SPEC 08, CI/CD endurecida y despliegue de reglas (`specs/08-ci-cd-endurecida.md`): jobs
-  paralelos, permisos, concurrencia, caché, `npm run size`, Dependabot y `rules.yml`. Aprobada
-  por Fernando el 2026-11-12; en implementación.
+  paralelos, permisos, concurrencia, caché, `npm run size`, Dependabot y `rules.yml`. Implementada
+  (PR #23); deploy de la app y primera publicación de reglas con `rules.yml` en verde el 2026-11-12.
