@@ -86,4 +86,4 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   (PRs #15 y #16); Fernando la probó en producción, también en el móvil, el 2026-11-11.
 - SPEC 07, migrar a TypeScript (`specs/07-migrar-a-typescript.md`): stores, `utils` y componentes
   en TypeScript, tipos del modelo en `types/models.ts` y `npm run typecheck` en la CI, sin cambiar la
-  lógica. Implementada en la rama `spec-07-migrar-a-typescript` (2026-11-11).
+  lógica. Implementada (PR #19); Fernando la probó con su cuenta el 2026-11-11.
