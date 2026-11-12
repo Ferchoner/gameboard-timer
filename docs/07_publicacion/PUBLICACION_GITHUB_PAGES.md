@@ -15,6 +15,12 @@
 ## Reglas
 
 - Hacer merge a `master` **es publicar**. Solo Fernando hace el merge.
+- `master` tiene un ruleset (Settings) que exige el check **Build y pruebas** de `ci.yml`. Ese check
+  es un job final que agrega a los demás (SPEC 08): no cambiarle el nombre o el ruleset bloquea
+  todos los PRs.
+- El deploy no corre pruebas: con el ruleset no entra nada en rojo a `master`.
+- Dependabot (`.github/dependabot.yml`) abre PRs cada lunes y pasan por la misma CI. No propone
+  versiones mayores de TypeScript hasta que vue-tsc las soporte (PR #28).
 - No cambiar `baseURL`, el preset ni el workflow sin aprobación: rompen las rutas publicadas.
 
 ## Probar el build como en producción
@@ -34,7 +40,8 @@ npm run preview                          # sirve el build localmente
 ## Reglas de Firestore
 
 Las reglas viven en `firestore.rules` (SPEC 04). Cada usuario con sesión solo puede leer y escribir
-su `Users/{uid}` y los `Timers` cuyo id empieza con `{uid}-`; todo lo demás queda negado.
+su `Users/{uid}` y los `Timers` cuyo id empieza con `{uid}-`; todo lo demás queda negado. Desde la
+SPEC 09 también validan campos, tipos y tamaños (ver `docs/02_diseno/FUNCIONALIDAD_ACTUAL.md`).
 
 Desde la SPEC 08 se publican solas con `.github/workflows/rules.yml` ("Deploy Firestore rules"):
 

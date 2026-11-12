@@ -1,6 +1,6 @@
 # Funcionalidad actual
 
-> Descripción de cómo funciona la app hoy (2026-11-11), sacada del código. Si el código cambia,
+> Descripción de cómo funciona la app hoy (2026-11-12), sacada del código. Si el código cambia,
 > se actualiza este documento en el mismo PR.
 
 ## Rutas
@@ -34,7 +34,8 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 
 ### Login, registro y logout
 
-- Login: modal en el header (`LoginFormComponent`), email y contraseña.
+- Login: modal en el header (`LoginFormComponent`), email y contraseña. Al entrar, el formulario
+  cierra su propio modal con `$bootstrap.Modal` (`plugins/useBootstrap.client.ts`).
 - Registro (`UserRegisterForm`): valida que la contraseña tenga al menos 6 caracteres, crea el
   usuario en Auth, escribe `Users/{uid}` (sin token) y pone `displayName` con nombre y apellido.
 - Los errores de login y registro se traducen a mensajes en inglés (`utils/authErrors.ts`), por
@@ -44,7 +45,8 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 
 ### Timers (`components/Page/Timers.vue`, `TimerComponent.vue`, `TimerModal.vue`)
 
-- "+" crea un timer "New Timer" con 2 jugadores aleatorios (nombre de una lista fija de `utils/randomPlayer.ts` y color hex al azar).
+- "+" crea un timer "New Timer" con 2 jugadores aleatorios: nombre de una lista fija y color hex
+  al azar (`utils/randomPlayer.ts`, SPEC 10).
 - Como invitado con al menos un timer, la lista muestra el aviso "Guest mode: your timers are lost
   if you reload or close this page. Sign up to keep them." (`GuestNotice.vue`), y recargar o
   cerrar la página pide confirmación (`beforeunload` en `app.vue`; el texto lo pone el navegador).

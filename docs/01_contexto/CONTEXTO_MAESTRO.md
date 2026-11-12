@@ -42,9 +42,9 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
   SPEC 09 validación en las reglas, SPEC 10 carga más ligera); Analytics se quita en la SPEC 10
   (Fernando, 2026-11-12).
 - CI en jobs paralelos con un check final **Build y pruebas** (el que exige el ruleset de
-  `master`), permisos mínimos, caché, acciones por SHA, Dependabot semanal, límite de 420 KB gzip
-  para el JS de entrada y reglas de Firestore publicadas por `rules.yml` con una cuenta de servicio
-  (secret `FIREBASE_SERVICE_ACCOUNT`); el deploy de la app no corre pruebas (spec 08, Fernando,
+  `master`), permisos mínimos, caché, acciones por SHA, Dependabot semanal, límite de tamaño
+  para el JS de entrada (420 KB gzip; 229 KB desde la spec 10) y reglas de Firestore publicadas
+  por `rules.yml` con una cuenta de servicio (secret `FIREBASE_SERVICE_ACCOUNT`); el deploy de la app no corre pruebas (spec 08, Fernando,
   2026-11-12).
 - Reglas que validan los datos: título 1–40 (también en el editor), nombre 1–20, 1–12 jugadores,
   color hex, tiempos 10–120, `Users` con campos cerrados y hasta 100 timers; ids de timer con 20
@@ -54,6 +54,8 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
   Khand 500/700 locales (OFL); Bootstrap por partes; sin `getAnalytics` (se deja `measurementId` en
   la configuración); guardado cada 15 s, al pausar y al salir; límite de tamaño = medido + 10 %
   (spec 10, Fernando, 2026-11-12).
+- Dependabot no propone versiones mayores de TypeScript: vue-tsc aún no funciona con TypeScript 7
+  (PR #28, Fernando, 2026-11-12). Se revisa cuando vue-tsc lo soporte.
 
 ## Pendientes
 
@@ -61,12 +63,16 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
   `progresive: false` o un `title: ''` que lleguen en los datos no se copian. Sin efecto visible hoy.
 - Avisos de deprecación de Sass en el build (vienen de Bootstrap 5 con `@import`). No rompen
   nada; corregirlos es otra spec.
-- Las E2E (spec 03) solo cubren el modo invitado. Las reglas se prueban con el emulador
-  (`npm run test:rules`, spec 04), pero probar la app con cuenta de punta a punta requiere que
-  apunte al emulador, lo que toca `plugins/firebase.client.ts`: spec aparte.
+- Las E2E (spec 03) cubren el modo invitado y el cierre del modal de login con respuestas falsas
+  de Firebase Auth (PR #32). Las reglas se prueban con el emulador (`npm run test:rules`, spec 04),
+  pero probar la app con cuenta de punta a punta requiere que apunte al emulador, lo que toca
+  `plugins/firebase.client.ts`: spec aparte.
 - Origen y licencia de `time_over.mp3` y de `clock_logo.png`: desconocidos (ver
   `docs/03_recursos/RECURSOS_Y_LICENCIAS.md`).
 - La página "My Account" (`/user`) está vacía y su botón está oculto en el header.
+- Ideas de la auditoría técnica del 2026-11-12 que quedaron fuera de las specs 08-10, sin spec
+  todavía: App Check para limitar la creación de timers, recuperar contraseña y verificar el email,
+  cargar Firestore solo al iniciar sesión, y rutas del timer por `FSid` en vez del índice.
 
 ## Mejoras solicitadas
 
@@ -111,3 +117,7 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   cada 15 s y al pausar. JS de entrada de 381 a 208 KB gzip (límite de `npm run size`: 229 KB) y CSS
   de 35,6 a 25,7 KB gzip. Implementada (PR #30); Fernando la probó con una cuenta en producción
   (registro, crear, editar, jugar, pausar y borrar) el 2026-11-12.
+- Cierre de la auditoría técnica del 2026-11-12, sin spec: el modal de login se cierra con la API de
+  Bootstrap (`$bootstrap.Modal`) en vez de simular un click en el primer `.btn-close` de la página,
+  con su E2E; y se quitó el pendiente que decía que `LoginFormComponent` no se usa (lo usa
+  `HeaderComponent`) (PR #32, 2026-11-12). Con esto quedó completo el orden aprobado de la auditoría.

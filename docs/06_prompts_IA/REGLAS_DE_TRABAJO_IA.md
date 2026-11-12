@@ -12,7 +12,8 @@
 8. No amplíes el alcance de una mejora sin autorización. Lo que surja va a otra spec.
 9. No inventes licencias, orígenes, datos ni decisiones.
 10. Cambios pequeños y enfocados; no mezcles refactors con mejoras.
-11. Ejecuta `npm run build` y la checklist manual que aplique antes de abrir el PR.
+11. Antes de abrir el PR: `npm run build` y `npm run typecheck` sin errores, `npm test` en verde y
+    la checklist manual que aplique. Un cambio de comportamiento lleva su prueba.
 12. Al terminar informa archivos modificados, pruebas, resultados, riesgos y siguiente paso.
 13. Actualiza `docs/` y `README.md` en el mismo PR si quedaron desfasados.
 
@@ -20,11 +21,13 @@
 
 1. **Definir.** Mejora pequeña (un componente, un ajuste visual, un bug acotado): describirla
    en el PR. Mejora grande: `/spec <descripción>` crea `specs/NN-slug.md` en estado Borrador.
-2. **Aprobar.** Fernando revisa la spec y cambia el estado a Aprobado.
+2. **Aprobar.** Fernando revisa la spec. Su aprobación en el chat cuenta (los PRs salen a su nombre
+   y GitHub no le deja aprobarlos): la IA pasa el estado a Aprobado en la rama.
 3. **Implementar.** `/spec-impl NN-slug` crea la rama `spec-NN-slug` e implementa paso a paso.
    Para cambios pequeños, rama propia.
-4. **Verificar.** `npm run build` y `docs/07_publicacion/CHECKLIST_PRUEBAS.md`.
-5. **PR.** Hacia `master`, con qué cambia, cómo se probó y riesgos. La CI repite el build.
+4. **Verificar.** Build, typecheck, `npm test` y `docs/07_publicacion/CHECKLIST_PRUEBAS.md`.
+5. **PR.** Hacia `master`, con qué cambia, cómo se probó y riesgos. La CI repite build,
+   typecheck, unitarias, reglas, tamaño del JS y E2E; el check **Build y pruebas** debe pasar.
 6. **Merge y deploy.** Fernando hace el merge; el workflow publica en GitHub Pages.
-7. **Cerrar.** Spec a Implementado, `CONTEXTO_MAESTRO.md` actualizado (mejora hecha, decisiones
-   nuevas, pendientes).
+7. **Cerrar.** Tras la prueba de Fernando en producción, spec a Implementado (en un PR aparte) y
+   `CONTEXTO_MAESTRO.md` actualizado (mejora hecha, decisiones nuevas, pendientes).

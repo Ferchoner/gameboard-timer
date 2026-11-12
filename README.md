@@ -23,6 +23,8 @@ npx playwright install chromium            # solo la primera vez
 NITRO_PRESET=github-pages npm run build    # las E2E corren contra el build
 npm run test:e2e                           # E2E en escritorio y móvil emulado
 npm run test:rules                         # reglas de Firestore en el emulador (Java 21+)
+npm run typecheck                          # tipos con vue-tsc
+npm run size                               # JS de entrada ≤ 229 KB gzip (tras el build)
 ```
 
 La CI corre el build, el typecheck, las unitarias, las reglas, el tamaño del JS (`npm run size`)
