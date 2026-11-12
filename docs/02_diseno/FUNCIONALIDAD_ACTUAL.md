@@ -20,8 +20,8 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 
 ### Arranque y sesión (`app.vue`, `stores/UserStore.ts`)
 
-1. `app.vue` espera a que Firebase Auth y Firestore estén listos (`MainStore`) y llama a
-   `userStore.listenAuth()`.
+1. Al montarse, `app.vue` comprueba una vez que Firebase Auth y Firestore existen (`MainStore`; el
+   plugin `firebase.client.ts` ya corrió) y llama a `userStore.listenAuth()`. Sin sondeo (SPEC 10).
 2. Si hay usuario, `getUserData` lee `Users/{uid}` y después cada documento de `Timers` que
    referencia, y los pone en `TimerStore.timers`. Es la única carga: el login espera a la del
    listener. Si `Users/{uid}` no existe (registro a medias), lo crea con email, nombre y
@@ -44,7 +44,7 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
 
 ### Timers (`components/Page/Timers.vue`, `TimerComponent.vue`, `TimerModal.vue`)
 
-- "+" crea un timer "New Timer" con 2 jugadores aleatorios (nombre y color con faker).
+- "+" crea un timer "New Timer" con 2 jugadores aleatorios (nombre de una lista fija de `utils/randomPlayer.ts` y color hex al azar).
 - Como invitado con al menos un timer, la lista muestra el aviso "Guest mode: your timers are lost
   if you reload or close this page. Sign up to keep them." (`GuestNotice.vue`), y recargar o
   cerrar la página pide confirmación (`beforeunload` en `app.vue`; el texto lo pone el navegador).
@@ -85,7 +85,9 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
   Funciona en Chrome Android e iOS 16.4 o posterior; en navegadores sin soporte no hace nada.
 - Si `/timer-app/N` no tiene timer una vez comprobada la sesión (invitado que recargó, enlace
   viejo, índice inválido), se muestra "Timer not found" con un botón a la lista.
-- Con sesión, cada 5 s `syncTimeValues` guarda el `currentTime` de cada jugador en Firestore.
+- Con sesión, `syncTimeValues` guarda el `currentTime` de cada jugador en Firestore cada 15 s, al
+  pausar (un jugador, el botón de pausa o "siguiente" en Continuous) y al salir de la pantalla
+  (`composables/useAutoSave.ts`, SPEC 10). Si la app se cierra de golpe se pierden como mucho 15 s.
 
 ## Modelo de datos (Firestore)
 
@@ -131,8 +133,8 @@ Escrituras (`stores/TimerStore.ts`):
 - `syncTimer` → iguala siempre `timeValue` y `currentTime` de todos los jugadores al del primero
   (`applySharedTime`, como número) y, con sesión, hace `updateDocument` del timer completo.
 - `syncTimeValues` → `updateDocument` solo de `players` con el `currentTime` actual, y solo si
-  algún tiempo cambió respecto al guardado. `TimerApp` lo llama cada 5 s y al salir de la
-  pantalla, así que en pausa no escribe.
+  algún tiempo cambió respecto al guardado. `TimerApp` lo llama cada 15 s, al pausar y al
+  salir de la pantalla (`useAutoSave`), así que en pausa el intervalo no escribe.
 - Si una escritura falla, no se lanza el error: `guardWrite` (`stores/MainStore.ts`) muestra el
   aviso "Couldn't save changes. Check your connection." (`SaveErrorToast`), que se cierra con su X.
 

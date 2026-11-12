@@ -50,12 +50,13 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
   color hex, tiempos 10–120, `Users` con campos cerrados y hasta 100 timers; ids de timer con 20
   caracteres de `crypto`; sin migración porque no hay cuentas reales; las reglas no limitan cuántos
   timers se crean (App Check, otra spec) (spec 09, Fernando, 2026-11-12).
+- Carga más ligera: nombres de jugador de una lista fija y color hex sin faker; Handjet variable y
+  Khand 500/700 locales (OFL); Bootstrap por partes; sin `getAnalytics` (se deja `measurementId` en
+  la configuración); guardado cada 15 s, al pausar y al salir; límite de tamaño = medido + 10 %
+  (spec 10, Fernando, 2026-11-12).
 
 ## Pendientes
 
-- Encontrado al tipar (spec 07, no se cambió): en `app.vue`, `restoreSessionData` usa
-  `mainStore.checkFirebaseAuth()` y `checkFirestore()` como condición, pero son `async`, así que la
-  condición siempre es verdadera y no espera a Firebase. Marcado con `@ts-expect-error`.
 - `components/LoginFormComponent.vue` no se usa en ninguna pantalla.
 - El constructor de `Timer` y `Player` ignora los campos con valor falso (`if (data[key])`): un
   `progresive: false` o un `title: ''` que lleguen en los datos no se copian. Sin efecto visible hoy.
@@ -105,3 +106,7 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 09, reglas de Firestore que validan los datos (`specs/09-reglas-validan-datos.md`): campos,
   tipos y tamaños en `Users`, `Timers` y jugadores, id de timer de 20 caracteres y título de 40 en
   el editor. Aprobada por Fernando el 2026-11-12; en implementación.
+- SPEC 10, carga más ligera (`specs/10-carga-ligera.md`): sin faker, sin Analytics, Bootstrap JS
+  solo con `Modal` y SCSS por partes, fuentes Handjet y Khand locales, arranque sin sondeo y guardado
+  cada 15 s y al pausar. JS de entrada de 381 a 208 KB gzip (límite de `npm run size`: 229 KB) y CSS
+  de 35,6 a 25,7 KB gzip. Aprobada por Fernando el 2026-11-12; en implementación.

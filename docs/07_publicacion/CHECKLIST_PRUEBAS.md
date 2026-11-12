@@ -12,7 +12,7 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 |---|---|
 | Build de producción | `NITRO_PRESET=github-pages npm run build` sin errores |
 | Tipos | `npm run typecheck` sin errores |
-| Tamaño del JS | `npm run size`: el chunk de entrada no pasa de 420 KB gzip |
+| Tamaño del JS | `npm run size`: el chunk de entrada no pasa de 229 KB gzip |
 | Reloj (`useCountdown`) | `npm run test:unit`: inicio, pausa, tiempo real sin intervalos, aviso único al llegar a 0, reinicios, sin intervalos tras `dispose` |
 | Store (`TimerStore`) | `npm run test:unit`: límites de 1 y 12 jugadores, "−" quita al último, tiempo común como número, índice en rango, Firestore solo con sesión, guardado del reloj solo con cambios, borrar quita la referencia por id, aviso si falla una escritura |
 | Sesión (`UserStore`) | `npm run test:unit`, con Firebase simulado: registro sin `accessToken`, se borra al iniciar sesión, cuenta sin documento se repara, timers borrados se ignoran, una sola carga por login |
@@ -28,7 +28,7 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 
 Las E2E corren como invitado, en Chromium de escritorio y en un Pixel 7 emulado, contra el build de
 producción servido bajo `/gameboard-timer/` (`tests/e2e/serve.mjs` imita GitHub Pages, con su
-`404.html`). Bloquean Google Analytics y fallan si la app deja errores en la consola.
+`404.html`). Fallan si la app deja errores en la consola o si pide algo a Google Fonts o a Analytics.
 
 Sigue siendo manual: el flujo "Con cuenta" de punta a punta (la app no apunta al emulador), lo que solo se ve en un
 teléfono real (segundo plano y bloqueo de verdad, Wake Lock real, que la alarma se oiga) y lo
@@ -49,7 +49,7 @@ visual (distribución de jugadores, header).
 - [ ] Editar el último timer de la lista, guardarlo y borrarlo no deja errores en consola.
 - [ ] Con un timer, la lista muestra el aviso de invitado; recargar pide confirmación y cancelar
   deja el timer (en móviles que no muestran el diálogo, queda el aviso).
-- [ ] Los iconos se ven igual que antes, también con Google Fonts bloqueado (pestaña Network).
+- [ ] Los iconos y las fuentes se ven igual que antes, sin pedidos a Google Fonts (pestaña Network).
 
 ### Timer en marcha
 - [ ] Modo normal: iniciar, pausar y reiniciar cada jugador por separado.
