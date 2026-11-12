@@ -3,10 +3,16 @@
 import type { Auth } from 'firebase/auth'
 import type { Firestore } from 'firebase/firestore'
 
+// Lo que la app usa de Bootstrap (plugins/useBootstrap.client.ts)
+type BootstrapBundle = {
+    Modal: { getOrCreateInstance(element: Element): { hide(): void } }
+}
+
 declare module '#app' {
     interface NuxtApp {
         $auth: Auth
         $firestore: Firestore
+        $bootstrap: BootstrapBundle
     }
 }
 
@@ -14,6 +20,7 @@ declare module 'vue' {
     interface ComponentCustomProperties {
         $auth: Auth
         $firestore: Firestore
+        $bootstrap: BootstrapBundle
     }
 }
 

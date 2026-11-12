@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useTimerStore } from "@/stores/TimerStore";
 const timerStore = useTimerStore();
 </script>
@@ -24,7 +24,9 @@ const timerStore = useTimerStore();
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import type { TimerStore } from "~/types/stores";
+
 export default {
   name: "TimerComponent",
   props: {
@@ -38,7 +40,7 @@ export default {
     }
   },
   methods: {
-    confirmRemove(timerStore) {
+    confirmRemove(timerStore: TimerStore) {
       if (window.confirm(`Delete "${this.timer.title}"?`)) {
         timerStore.removeTimer(this.timerIndex);
       }
