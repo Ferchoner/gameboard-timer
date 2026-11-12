@@ -1,0 +1,62 @@
+# Publica firestore.rules en Firebase después del merge (SPEC 08).
+# Solo corre si el push a master cambia firestore.rules, o a mano desde Actions.
+# Antes de publicar prueba las reglas con el emulador; si fallan, no se publica nada.
+# Necesita el secret FIREBASE_SERVICE_ACCOUNT (ver docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md).
+name: Deploy Firestore rules
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - firestore.rules
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firestore-rules
+  cancel-in-progress: false
+
+jobs:
+  deploy-rules:
+    name: Probar y publicar reglas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Versión de firebase-tools
+        id: firebase-tools
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/firebase-tools'].version")" >> "$GITHUB_OUTPUT"
+
+      - name: Caché del emulador de Firestore
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ runner.os }}-${{ steps.firebase-tools.outputs.version }}
+
+      - name: Pruebas de reglas de Firestore (emulador)
+        run: npm run test:rules
+
+      # Cuenta de servicio con solo Firebase Rules Admin y Service Usage Consumer
+      - name: Autenticar con Google Cloud
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Publicar reglas
+        run: npx firebase deploy --only firestore:rules --project timer-42311 --non-interactive
