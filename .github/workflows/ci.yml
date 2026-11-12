@@ -1,20 +1,86 @@
 # CI: en cada PR comprueba que la app compila, igual que el deploy, y corre las pruebas.
 # Si falla, el PR aparece en rojo antes de fusionarlo a master (que publica).
+# SPEC 08: tres jobs en paralelo y un job final "Build y pruebas", que es el check que exige el
+# ruleset de master. No cambiar ese nombre.
 name: CI
 
 on:
   pull_request:
 
+permissions:
+  contents: read
+
+# Un push nuevo al mismo PR cancela la CI anterior que siga en marcha
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    name: Build y pruebas
+  rapido:
+    name: Typecheck y unitarias
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24" # misma versión que el deploy (main.yml)
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # Revisa los tipos de los .ts y .vue con vue-tsc (SPEC 07)
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Pruebas unitarias
+        run: npm run test:unit
+
+  reglas:
+    name: Reglas de Firestore
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # El emulador de Firestore (firebase-tools) necesita Java 21 o posterior
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Versión de firebase-tools
+        id: firebase-tools
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/firebase-tools'].version")" >> "$GITHUB_OUTPUT"
+
+      # El emulador se descarga la primera vez; la caché lo guarda por versión de firebase-tools
+      - name: Caché del emulador de Firestore
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ runner.os }}-${{ steps.firebase-tools.outputs.version }}
+
+      - name: Pruebas de reglas de Firestore (emulador)
+        run: npm run test:rules
+
+  e2e:
+    name: Build, tamaño y E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
 
       - name: Instalar dependencias
         run: npm ci
@@ -24,24 +90,29 @@ jobs:
         env:
           NITRO_PRESET: github-pages
 
-      # Revisa los tipos de los .ts y .vue con vue-tsc (SPEC 07)
-      - name: Typecheck
-        run: npm run typecheck
+      # Falla si el JavaScript de entrada pasa del límite (scripts/check-bundle-size.mjs)
+      - name: Tamaño del JavaScript
+        run: npm run size
 
-      - name: Pruebas unitarias
-        run: npm run test:unit
+      - name: Versión de Playwright
+        id: playwright
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> "$GITHUB_OUTPUT"
 
-      # El emulador de Firestore (firebase-tools) necesita Java 21 o posterior
-      - uses: actions/setup-java@v6
+      - name: Caché de navegadores de Playwright
+        id: playwright-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          distribution: temurin
-          java-version: "21"
-
-      - name: Pruebas de reglas de Firestore (emulador)
-        run: npm run test:rules
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
 
       - name: Instalar Chromium para Playwright
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      # Con la caché presente solo faltan las dependencias del sistema
+      - name: Dependencias del sistema para Chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       # Reutiliza el build anterior: Playwright sirve .output/public bajo /gameboard-timer/
       - name: Pruebas E2E
@@ -49,8 +120,27 @@ jobs:
 
       - name: Subir reporte de Playwright
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: playwright-report
           path: playwright-report
           retention-days: 7
+
+  # Check que exige el ruleset de master: solo pasa si los tres jobs pasaron
+  build-y-pruebas:
+    name: Build y pruebas
+    if: always()
+    needs: [rapido, reglas, e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resultado de los jobs
+        env:
+          RAPIDO: ${{ needs.rapido.result }}
+          REGLAS: ${{ needs.reglas.result }}
+          E2E: ${{ needs.e2e.result }}
+        run: |
+          echo "rapido=$RAPIDO reglas=$REGLAS e2e=$E2E"
+          if [ "$RAPIDO" != "success" ] || [ "$REGLAS" != "success" ] || [ "$E2E" != "success" ]; then
+            echo "Algún job no terminó en success."
+            exit 1
+          fi
