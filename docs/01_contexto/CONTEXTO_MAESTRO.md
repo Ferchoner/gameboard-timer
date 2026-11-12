@@ -104,4 +104,5 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
   (PR #23); deploy de la app y primera publicación de reglas con `rules.yml` en verde el 2026-11-12.
 - SPEC 09, reglas de Firestore que validan los datos (`specs/09-reglas-validan-datos.md`): campos,
   tipos y tamaños en `Users`, `Timers` y jugadores, id de timer de 20 caracteres y título de 40 en
-  el editor. Aprobada por Fernando el 2026-11-12; en implementación.
+  el editor. Implementada (PR #27); `rules.yml` publicó las reglas solo tras el merge y Fernando
+  lo probó con una cuenta nueva en producción el 2026-11-12.
