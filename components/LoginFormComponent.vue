@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 text-center form-container">
-    <form action="/login" @submit.stop.prevent="() => login(userStore)">
+    <form action="/login" @submit.stop.prevent="() => login(userStore!)">
       <div v-if="formMessages" :class="`messages ${(hasErrors ? 'error' : '')}`">
         <span> {{ formMessages }} </span>
       </div>
@@ -18,8 +18,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { authErrorMessage } from '~/utils/authErrors'
+import type { PropType } from 'vue'
+import type { UserStore } from '~/types/stores'
 
 export default {
   name: "LoginFormComponent",
@@ -35,10 +37,10 @@ export default {
     }
   },
   props: {
-    userStore: Object
+    userStore: Object as PropType<UserStore>
   },
   methods: {
-    login(userStore) {
+    login(userStore: UserStore) {
       if (!this.isLoading) {
         this.isLoading = true;
         userStore.login(this.creds)

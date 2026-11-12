@@ -1,8 +1,15 @@
 import { defineStore } from 'pinia';
 import { useTimerStore } from '~/stores/TimerStore'
 import { guardWrite } from '~/stores/MainStore'
+import type { User, UserCredential } from 'firebase/auth'
+import type { DocumentData } from 'firebase/firestore'
+import type { TimerData, UserData } from '~/types/models'
 
-const emptyUser = () => ({
+// Datos del formulario de registro (components/Page/UserRegisterForm.vue) y de login
+type Credentials = { email: string, password: string }
+type RegisterData = Credentials & { firstName: string, lastName: string }
+
+const emptyUser = (): UserData => ({
     email: '',
     username: '',
     firstName: '',
@@ -17,7 +24,7 @@ export const useUserStore = defineStore( 'UserStore', {
         return {
             user: emptyUser(),
             usrChecked: false,
-            userLoad: null // promesa de la carga en curso de los datos del usuario
+            userLoad: null as Promise<void> | null // promesa de la carga en curso de los datos del usuario
         }
     },
     getters: {
@@ -50,22 +57,21 @@ export const useUserStore = defineStore( 'UserStore', {
                 }
             });
         },
-        async guest(userData) {
+        async guest(userData: UserData) {
             // función para generar un state para usuarios invitados
             this.user = userData;
             this.user.guest = true;
             return new Promise((resolve) => setTimeout(resolve, 300))
         },
-        async register(userData) {
+        async register(userData: RegisterData) {
             const { updateUser, registerUser } = useFirebaseAuth(); // auto-imported
             const { setDocument } = useFirestore();
             return await registerUser(userData.email, userData.password)
                 .then(async (response) => {
                     // Sin accessToken: un token no se guarda en la base de datos (SPEC 04)
-                    // @ts-ignore
                     this.user = {
                         email: userData.email,
-                        username: userData.email.split('@')[0],
+                        username: userData.email.split('@')[0]!,
                         firstName: userData.firstName,
                         lastName: userData.lastName,
                         timers: [],
@@ -82,7 +88,7 @@ export const useUserStore = defineStore( 'UserStore', {
                     return err;
                 })
         },
-        async login(userData) {
+        async login(userData: Credentials) {
             const { loginUser } = useFirebaseAuth() // auto-imported
             return await loginUser(userData.email, userData.password)
                 .then(async (response) => {
@@ -98,7 +104,7 @@ export const useUserStore = defineStore( 'UserStore', {
             const { logoutUser } = useFirebaseAuth();
             return await logoutUser();
         },
-        async updateTimers(id, action = 'add') {
+        async updateTimers(id: string, action: 'add' | 'delete' = 'add') {
             const { docRef, updateDocument, addToArray, removeFromArray } = useFirestore();
             const ref = docRef('Timers', id);
             if (action === 'add') {
@@ -109,13 +115,13 @@ export const useUserStore = defineStore( 'UserStore', {
             this.user.timers = this.user.timers.filter(timer => timer.id !== id);
             return await guardWrite(updateDocument('Users', this.user.uid, { timers: removeFromArray(ref) }))
         },
-        async getUserData(response) {
+        async getUserData(response: { user: User } | UserCredential) {
             const { getDocument, setDocument, updateDocument, removeField } = useFirestore();
             const authUser = response.user;
             const docSnap = await getDocument('Users', authUser.uid);
-            let data;
+            let data: DocumentData;
             if (docSnap.exists()) {
-                data = docSnap.data();
+                data = docSnap.data()!;
                 if ('accessToken' in data) {
                     // Limpieza de cuentas viejas: el token no debe quedar en Firestore
                     delete data.accessToken;
@@ -137,11 +143,11 @@ export const useUserStore = defineStore( 'UserStore', {
             }
             data.timers = data.timers || [];
 
-            const snapshots = await Promise.all(data.timers.map(timer => getDocument('Timers', timer.id)));
+            const snapshots = await Promise.all(data.timers.map((timer: { id: string }) => getDocument('Timers', timer.id)));
             // Un timer borrado o inaccesible no rompe la lista
-            const timers = snapshots.filter(snapshot => snapshot.exists()).map(snapshot => snapshot.data());
+            const timers = snapshots.filter(snapshot => snapshot.exists()).map(snapshot => snapshot.data() as TimerData);
 
-            this.user = { ...data, guest: false };
+            this.user = { ...data, guest: false } as UserData;
             useTimerStore().timers = timers;
             return response;
         }

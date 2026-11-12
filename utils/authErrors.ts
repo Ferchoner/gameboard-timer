@@ -1,6 +1,6 @@
 // Mensajes de error de Firebase Auth para el usuario, en inglés como el resto de la interfaz.
 // Recibe el error de Firebase (o cualquier objeto con `code`).
-const MESSAGES = {
+const MESSAGES: Record<string, string> = {
     'auth/invalid-credential': 'Wrong email or password.',
     'auth/invalid-login-credentials': 'Wrong email or password.',
     'auth/wrong-password': 'Wrong email or password.',
@@ -17,6 +17,6 @@ const MESSAGES = {
 export const GENERIC_AUTH_ERROR = 'Something went wrong. Try again.'
 export const MIN_PASSWORD_LENGTH = 6
 
-export function authErrorMessage(error) {
-    return MESSAGES[error?.code] || GENERIC_AUTH_ERROR
+export function authErrorMessage(error?: { code?: string } | null): string {
+    return MESSAGES[error?.code as string] || GENERIC_AUTH_ERROR
 }

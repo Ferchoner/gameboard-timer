@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useTimerStore } from "@/stores/TimerStore";
 import { useUserStore } from "@/stores/UserStore";
 
@@ -24,12 +24,12 @@ const countdown = useCountdown();
 const wakeLock = useWakeLock();
 const current = ref(0);
 const alarmPending = ref(false);
-const timeOverAudio = ref(null);
-let synchronizer = null;
+const timeOverAudio = ref<HTMLAudioElement | null>(null);
+let synchronizer: ReturnType<typeof setInterval> | null = null;
 
 const isPlaying = computed(() => countdown.anyRunning());
 
-const formatTime = (i) => {
+const formatTime = (i: number) => {
   const cs = countdown.centiseconds(i);
   return `${Math.trunc(cs / 6000)} : ${String(Math.trunc((cs % 6000) / 100)).padStart(2, '0')}`;
 };
@@ -53,7 +53,7 @@ function startSync() {
 }
 
 // Modo normal
-function togglePlayer(i) {
+function togglePlayer(i: number) {
   if (countdown.isRunning(i)) {
     countdown.pause(i);
   } else {
@@ -61,12 +61,12 @@ function togglePlayer(i) {
   }
 }
 
-function resetPlayer(i) {
-  countdown.reset(i, Number(players.value[i].timeValue));
+function resetPlayer(i: number) {
+  countdown.reset(i, Number(players.value[i]!.timeValue));
 }
 
 // Modo Continuous
-function nextWithTime(from) {
+function nextWithTime(from: number) {
   const total = players.value.length;
   for (let k = 1; k <= total; k++) {
     const j = (from + k) % total;
@@ -101,12 +101,12 @@ function pauseContinuous() {
 }
 
 function resetAll() {
-  countdown.resetAll(Number(players.value[0].timeValue));
+  countdown.resetAll(Number(players.value[0]!.timeValue));
   current.value = 0;
 }
 
 // Alarma: si la app está en segundo plano, suena al volver
-function playTimeAlert(playerNumber) {
+function playTimeAlert(playerNumber: number) {
   if (document.visibilityState === 'hidden') {
     alarmPending.value = true;
     return;
@@ -140,7 +140,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange);
-  clearInterval(synchronizer);
+  clearInterval(synchronizer ?? undefined);
   synchronizer = null;
   // Guarda los tiempos finales al salir (no escribe si no cambiaron)
   if (timer.value) {

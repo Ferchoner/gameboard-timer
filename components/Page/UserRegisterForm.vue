@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from "@/stores/UserStore";
 const userStore = useUserStore();
 
@@ -39,8 +39,9 @@ useHead({
   </div>
 </template>
 
-<script>
-import IsLoadingComponent from "./../IsLoadingComponent";
+<script lang="ts">
+import IsLoadingComponent from "./../IsLoadingComponent.vue";
+import type { UserStore } from '~/types/stores';
 import { authErrorMessage, MIN_PASSWORD_LENGTH } from '~/utils/authErrors';
 
 export default {
@@ -60,7 +61,7 @@ export default {
     }
   },
   methods: {
-    register(userStore) {
+    register(userStore: UserStore) {
       if(!this.isLoading) {
         if (this.user.password.length < MIN_PASSWORD_LENGTH) {
           // Se valida antes de llamar a Firebase

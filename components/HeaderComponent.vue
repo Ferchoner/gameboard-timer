@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from "@/stores/UserStore";
 const userStore = useUserStore();
 </script>
@@ -39,7 +39,7 @@ const userStore = useUserStore();
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "HeaderComponent",
   data() {

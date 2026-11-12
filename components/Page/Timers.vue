@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from "@/stores/UserStore";
 import { useTimerStore } from "@/stores/TimerStore";
 const userStore = useUserStore();
@@ -39,7 +39,9 @@ useHead({
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import type { TimerStore, UserStore } from "~/types/stores";
+
 export default {
   name: "Timers",
   data() {
@@ -48,7 +50,7 @@ export default {
     }
   },
   methods: {
-    addTimer(timerStore, title, userStore) {
+    addTimer(timerStore: TimerStore, title: string, userStore: UserStore) {
       timerStore.addTimer(title, userStore);
     }
   }

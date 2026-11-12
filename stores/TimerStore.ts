@@ -2,6 +2,9 @@ import { defineStore } from 'pinia';
 import {useUserStore} from "~/stores/UserStore";
 import { guardWrite } from "~/stores/MainStore";
 import { faker } from '@faker-js/faker/locale/en';
+import type { TimerData, PlayerData } from '~/types/models';
+
+type UserStore = ReturnType<typeof useUserStore>;
 
 export const MIN_PLAYERS = 1;
 export const MAX_PLAYERS = 12;
@@ -10,7 +13,8 @@ export const MAX_NAME_LENGTH = 20; // caracteres por nombre de jugador en el edi
 export const useTimerStore = defineStore( 'TimerStore', {
     state: () => {
         return {
-            timers: [],
+            // Timer al crearlo en la app; TimerData tal como llega de Firestore
+            timers: [] as TimerData[],
             index: 0
         }
     },
@@ -18,14 +22,14 @@ export const useTimerStore = defineStore( 'TimerStore', {
         playersCount: (state) => state.timers.map((timer) => timer.players.length)
     },
     actions: {
-        addTimer(data, userStore) {
+        addTimer(data: Partial<TimerData> | string, userStore: UserStore): number {
             this.timers.push(new Timer(data));
             if (userStore.user.uid && userStore.usrChecked) { // User exists in Firestore
                 this.syncTimers(this.timers.length - 1, userStore);
             }
             return this.timers.length -1
         },
-        removeTimer(index) {
+        removeTimer(index: number): TimerData | undefined {
             const userStore = useUserStore();
             const deletedTimer = this.timers.splice(index, 1);
             // El índice del modal nunca debe quedar fuera de la lista
@@ -37,67 +41,67 @@ export const useTimerStore = defineStore( 'TimerStore', {
             }
             return deletedTimer[0];
         },
-        addPlayer(timerIndex) {
-            const players = this.timers[timerIndex].players;
+        addPlayer(timerIndex: number): number {
+            const players = this.timers[timerIndex]!.players;
             if (players.length >= MAX_PLAYERS) {
                 return players.length;
             }
             // El jugador nuevo toma el tiempo actual del timer
             const player = new Player();
             if (players.length) {
-                player.timeValue = Number(players[0].timeValue);
+                player.timeValue = Number(players[0]!.timeValue);
                 player.currentTime = player.timeValue;
             }
             return players.push(player);
         },
-        removePlayer(timerIndex) {
+        removePlayer(timerIndex: number): PlayerData[] {
             // Quita siempre al último jugador; el primero guarda el tiempo del timer
-            const players = this.timers[timerIndex].players;
+            const players = this.timers[timerIndex]!.players;
             if (players.length <= MIN_PLAYERS) {
                 return [];
             }
             return players.splice(players.length - 1, 1);
         },
-        async syncTimers(i, userStore, dTimer) {
+        async syncTimers(i: number, userStore: UserStore, dTimer?: TimerData) {
             const { setDocument, deleteDocument } = useFirestore();
             const key = faker.string.alphanumeric(5);
 
             if (!dTimer) {
-                this.timers[i].FSid = `${userStore.user.uid}-${key}`;
-                const frData = { ...this.timers[i] };
-                frData.players = this.timers[i].players.map(player => { return {...player} });
+                this.timers[i]!.FSid = `${userStore.user.uid}-${key}`;
+                const frData = { ...this.timers[i]! };
+                frData.players = this.timers[i]!.players.map(player => { return {...player} });
 
                 // Primero el timer y después la referencia: las reglas solo dejan referenciar timers propios
-                await guardWrite(setDocument('Timers', this.timers[i].FSid, frData));
-                return await userStore.updateTimers(this.timers[i].FSid, 'add');
+                await guardWrite(setDocument('Timers', this.timers[i]!.FSid, frData));
+                return await userStore.updateTimers(this.timers[i]!.FSid, 'add');
             }
             else {
                 await guardWrite(deleteDocument('Timers', dTimer.FSid));
                 return await userStore.updateTimers(dTimer.FSid, 'delete');
             }
         },
-        applySharedTime(i) {
+        applySharedTime(i: number) {
             // Todos los jugadores comparten el tiempo del primero (invitado o con cuenta)
-            const players = this.timers[i].players;
-            const fixedTime = Number(players[0].timeValue);
+            const players = this.timers[i]!.players;
+            const fixedTime = Number(players[0]!.timeValue);
             players.forEach(player => {
                 player.timeValue = fixedTime;
                 player.currentTime = fixedTime;
             });
         },
-        syncTimer(i) {
+        syncTimer(i: number) {
             this.applySharedTime(i);
             const userStore = useUserStore();
             if (userStore.user.uid && userStore.usrChecked) { // User exists in Firesore
                 const { updateDocument } = useFirestore();
-                const frData = { ...this.timers[i] };
-                frData.players = this.timers[i].players.map(player => ({ ...player }));
-                return guardWrite(updateDocument('Timers', this.timers[i].FSid, frData));
+                const frData = { ...this.timers[i]! };
+                frData.players = this.timers[i]!.players.map(player => ({ ...player }));
+                return guardWrite(updateDocument('Timers', this.timers[i]!.FSid, frData));
             }
         },
         // timeValues: centésimas restantes por jugador. Solo escribe si algún tiempo cambió desde
         // lo último guardado (currentTime, en minutos): en pausa no hay escrituras.
-        async syncTimeValues(i, timeValues) {
+        async syncTimeValues(i: number, timeValues: number[]) {
             const userStore = useUserStore();
             const timer = this.timers[i];
             if (!timer || !userStore.user.uid || !userStore.usrChecked) return null;
@@ -106,10 +110,10 @@ export const useTimerStore = defineStore( 'TimerStore', {
             if (!changed) return null;
 
             const { updateDocument } = useFirestore();
-            const frData = {};  // Only pass players to update them
+            const frData: { players?: PlayerData[] } = {};  // Only pass players to update them
             frData.players = timer.players.map((player, j) => {
                 if (timeValues[j] !== undefined) {
-                    player.currentTime = (timeValues[j] / 6000);
+                    player.currentTime = (timeValues[j]! / 6000);
                 }
                 return {...player}
             });
@@ -118,19 +122,21 @@ export const useTimerStore = defineStore( 'TimerStore', {
     }
 })
 
-export const Timer = class {
+export const Timer = class implements TimerData {
     FSid = '';
     progresive = false;
     title = 'Timer Title';
-    players = [];
-    createdAt = new Date();
-    updateAt = new Date();
+    players: PlayerData[] = [];
+    createdAt: TimerData['createdAt'] = new Date();
+    updateAt: TimerData['updateAt'] = new Date();
 
-    constructor(data) {
+    constructor(data?: Partial<TimerData> | string) {
         if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
-            for(const key in data) {
-                if (data[key]) {
-                    this[key] = data[key];
+            // Copia los campos con valor; los falsos se ignoran a propósito (comportamiento de siempre)
+            const fields = data as Record<string, unknown>;
+            for(const key in fields) {
+                if (fields[key]) {
+                    (this as unknown as Record<string, unknown>)[key] = fields[key];
                 }
             }
         } else if (typeof data === 'string') {
@@ -143,13 +149,13 @@ export const Timer = class {
     }
 }
 
-export const Player = class {
+export const Player = class implements PlayerData {
     timeValue = 25;
     currentTime = 25;
     name = 'Jack';
     color = '#000000';
 
-    constructor(data) {
+    constructor(data?: Partial<PlayerData> | string | number) {
         if (!data) {
             this.timeValue = 25;
             this.currentTime = 25;
@@ -157,9 +163,10 @@ export const Player = class {
             this.color = faker.color.rgb();
         }
         if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
-            for(const key in data) {
-                if (data[key]) {
-                    this[key] = data[key];
+            const fields = data as Record<string, unknown>;
+            for(const key in fields) {
+                if (fields[key]) {
+                    (this as unknown as Record<string, unknown>)[key] = fields[key];
                 }
             }
         } else if (typeof data === 'string') {

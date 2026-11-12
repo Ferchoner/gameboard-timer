@@ -34,9 +34,19 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
 - Node 24, Nuxt 4, Firebase 13 y solo npm con `npm ci` en CI y deploy; se quitan
   `@sidebase/nuxt-session` y `@nuxtjs/robots`; las carpetas no se mueven a `app/` (spec 05,
   Fernando, 2026-11-11).
+- TypeScript en stores, `utils` y componentes, con `npm run typecheck` en la CI; las pruebas y la
+  configuración siguen en JS; los tipos de `$firestore`/`$auth` van en un `.d.ts` sin tocar el plugin;
+  no se reescriben los bloques de opciones a `<script setup>`; estricto por defecto de Nuxt (spec 07,
+  Fernando, 2026-11-11).
 
 ## Pendientes
 
+- Encontrado al tipar (spec 07, no se cambió): en `app.vue`, `restoreSessionData` usa
+  `mainStore.checkFirebaseAuth()` y `checkFirestore()` como condición, pero son `async`, así que la
+  condición siempre es verdadera y no espera a Firebase. Marcado con `@ts-expect-error`.
+- `components/LoginFormComponent.vue` no se usa en ninguna pantalla.
+- El constructor de `Timer` y `Player` ignora los campos con valor falso (`if (data[key])`): un
+  `progresive: false` o un `title: ''` que lleguen en los datos no se copian. Sin efecto visible hoy.
 - Avisos de deprecación de Sass en el build (vienen de Bootstrap 5 con `@import`). No rompen
   nada; corregirlos es otra spec.
 - Las E2E (spec 03) solo cubren el modo invitado. Las reglas se prueban con el emulador
@@ -74,3 +84,6 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 06, aviso al invitado, nombres largos, accesibilidad e iconos propios
   (`specs/06-pulido-accesibilidad.md`): cierra P1-5, P1-10, P2-8 y P2-9 de la revisión QA. Implementada
   (PRs #15 y #16); Fernando la probó en producción, también en el móvil, el 2026-11-11.
+- SPEC 07, migrar a TypeScript (`specs/07-migrar-a-typescript.md`): stores, `utils` y componentes
+  en TypeScript, tipos del modelo en `types/models.ts` y `npm run typecheck` en la CI, sin cambiar la
+  lógica. Implementada en la rama `spec-07-migrar-a-typescript` (2026-11-11).

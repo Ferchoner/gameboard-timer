@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from '~/stores/UserStore'
 import { useTimerStore } from '~/stores/TimerStore'
 const userStore = useUserStore()

@@ -30,7 +30,7 @@ export const useMainStore = defineStore( 'MainStore', {
 
 // Envuelve una escritura a Firestore: si falla, avisa en la app en lugar de perder el error.
 // Devuelve null si falló; nunca lanza.
-export async function guardWrite(write) {
+export async function guardWrite<T>(write: Promise<T>): Promise<T | null> {
     try {
         return await write;
     } catch (error) {

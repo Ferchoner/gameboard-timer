@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from "~/stores/UserStore";
 import { useMainStore } from "~/stores/MainStore";
 import { useTimerStore } from "~/stores/TimerStore";
-import IsLoadingComponent from "./components/IsLoadingComponent";
+import IsLoadingComponent from "./components/IsLoadingComponent.vue";
 const userStore = useUserStore();
 const mainStore = useMainStore();
 </script>
@@ -23,7 +23,8 @@ const mainStore = useMainStore();
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import type { UserStore, MainStore } from "~/types/stores";
 const LOADING_TIMEOUT_MS = 15000;
 
 export default {
@@ -63,8 +64,11 @@ export default {
     }
   },
   methods: {
-    async restoreSessionData(userStore, mainStore) {
+    async restoreSessionData(userStore: UserStore, mainStore: MainStore) {
       const checker = setInterval(() => {
+        // checkFirebaseAuth y checkFirestore son async: la condición siempre es verdadera (pendiente en
+        // CONTEXTO_MAESTRO.md). SPEC 07 solo agrega tipos y no cambia este comportamiento.
+        // @ts-expect-error TS2801: promesa usada como condición
         if (mainStore && mainStore.checkFirebaseAuth() && mainStore.checkFirestore()) {
           clearInterval(checker);
           userStore.listenAuth()

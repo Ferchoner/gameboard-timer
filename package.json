@@ -10,7 +10,8 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-gameboard-timer \"vitest run --config vitest.rules.config.mjs\""
+    "test:rules": "firebase emulators:exec --only firestore --project demo-gameboard-timer \"vitest run --config vitest.rules.config.mjs\"",
+    "typecheck": "nuxi typecheck"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "6.0.0",
@@ -19,7 +20,9 @@
     "@types/node": "^24.0.0",
     "firebase-tools": "15.35.0",
     "nuxt": "^4.6.4",
-    "vitest": "^5.1.0"
+    "typescript": "6.0.3",
+    "vitest": "^5.1.0",
+    "vue-tsc": "3.3.14"
   },
   "dependencies": {
     "@faker-js/faker": "^10.6.0",

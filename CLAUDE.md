@@ -14,7 +14,8 @@ GitHub Pages; el trabajo actual es de **mejoras y ajustes**.
 ## Stack
 
 Nuxt 4 (Vue 3) + Pinia + Bootstrap 5 + SCSS + Firebase 13 (Auth, Firestore, Analytics), con Node 24
-(`.nvmrc`). Gestor de paquetes: solo npm.
+(`.nvmrc`). Gestor de paquetes: solo npm. TypeScript en stores, composables, `utils` y componentes
+(`lang="ts"`), revisado con `vue-tsc`; las pruebas y los archivos de configuración siguen en JS.
 Iconos: Material Symbols, subconjunto servido desde `assets/fonts/` (ver `RECURSOS_Y_LICENCIAS.md`). Git/GitHub, deploy con GitHub Actions a GitHub Pages.
 
 ## Fuente de verdad (leer antes de trabajar)
@@ -49,9 +50,11 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
   `/user` y `/user/signup-form`.
 - `components/Page/` — lógica de cada pantalla (`TimerApp.vue` es el temporizador).
   `components/` — piezas reutilizables (header, footer, modal de timer, login, loading).
-- `stores/` (Pinia) — `TimerStore.js` (timers, jugadores y sincronización con Firestore, clases
-  `Timer` y `Player`), `UserStore.js` (sesión y usuario), `MainStore.js` (Firebase listo).
+- `stores/` (Pinia) — `TimerStore.ts` (timers, jugadores y sincronización con Firestore, clases
+  `Timer` y `Player`), `UserStore.ts` (sesión y usuario), `MainStore.ts` (Firebase listo).
 - `composables/` — `useFirebaseAuth.ts` y `useFirestore.ts`, envoltorios finos sobre Firebase.
+- `types/` — `models.ts` (documentos de Firestore: `TimerData`, `PlayerData`, `UserData`),
+  `stores.ts` (tipos de los stores) y `.d.ts` de `$firestore`, `$auth`, `$bootstrap` y Bootstrap.
 - `plugins/` — `firebase.client.ts` (inicializa Firebase) y `useBootstrap.client.ts`.
 - `assets/` — `css/master.scss` (importa `_icons.scss`), `audio/time_over.mp3`, `images/`, `fonts/`. `public/` — favicons y manifest.
 
@@ -61,9 +64,9 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - Mejoras grandes: flujo spec-driven. `/spec` crea la spec en `specs/` (estado Borrador) y
   `/spec-impl` implementa solo specs con estado Aprobado, en su rama `spec-NN-slug`.
   Las specs se escriben en español (`Borrador`, `En revisión`, `Aprobado`, `Implementado`, `Obsoleto`).
-- Antes de abrir un PR: `npm run build` sin errores, `npm test` en verde y la checklist manual de
+- Antes de abrir un PR: `npm run build` y `npm run typecheck` sin errores, `npm test` en verde y la checklist manual de
   `docs/07_publicacion/CHECKLIST_PRUEBAS.md` en lo que toque el cambio. La CI
-  (`.github/workflows/ci.yml`) repite el build, las unitarias y las E2E en cada PR.
+  (`.github/workflows/ci.yml`) repite el build, el typecheck, las unitarias y las E2E en cada PR.
 - Un cambio de comportamiento lleva su prueba en `tests/unit/` o `tests/e2e/`.
 - Al terminar: informa archivos modificados, pruebas hechas, riesgos y siguiente paso, y revisa
   qué documentos de `docs/` y el `README.md` quedaron desfasados.
@@ -76,6 +79,8 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
 - `npm run build` — build de producción. Con `NITRO_PRESET=github-pages` genera `.output/public`,
   igual que el deploy.
 - `npm run preview` — servir el build localmente.
+- `npm run typecheck` — revisa los tipos de los `.ts` y `.vue` con `vue-tsc` (`nuxi typecheck`).
+  Debe terminar sin errores y sin `@ts-ignore` nuevos.
 - `npm run test:unit` — pruebas unitarias con Vitest (`tests/unit/`: `useCountdown`, `TimerStore`, `UserStore`,
   `authErrors` e `icons`).
 - `npm run test:e2e` — pruebas E2E con Playwright (`tests/e2e/`) contra el build de producción, en
@@ -86,4 +91,4 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
   (`tests/rules/`). Necesita Java 21 o posterior; la CI lo instala. Las reglas no se publican con
   el deploy: Fernando las pega en la consola (ver `docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
 
-No hay typecheck ni linter configurados.
+No hay linter configurado.

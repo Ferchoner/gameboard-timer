@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 useHead({
   title: 'Timer for friends | User account'
 })
@@ -10,7 +10,7 @@ useHead({
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "User"
 }

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from "@/stores/UserStore";
 import { useTimerStore, MIN_PLAYERS, MAX_PLAYERS, MAX_NAME_LENGTH } from "@/stores/TimerStore";
 const userStore = useUserStore();
@@ -17,7 +17,7 @@ const timerStore = useTimerStore();
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header px-3 mx-0 pb-1 mb-1">
-          <h5 class="modal-title" id="staticBackdropLabel">{{ timerStore.timers[timerIndex].title }}</h5>
+          <h5 class="modal-title" id="staticBackdropLabel">{{ timerStore.timers[timerIndex]!.title }}</h5>
           <button
               type="button"
               class="btn-close"
@@ -40,7 +40,7 @@ const timerStore = useTimerStore();
                         id="timer-title"
                         class="form-control timer-title mt-2"
                         placeholder="Timer one"
-                        v-model="timerStore.timers[timerIndex].title"
+                        v-model="timerStore.timers[timerIndex]!.title"
                         required
                     >
                   </div>
@@ -48,24 +48,24 @@ const timerStore = useTimerStore();
                     <span id="timer-players-label" class="form-label d-inline-block">Players (Timer buttons)</span>
                     <div class="input-group mb-3 px-1" role="group" aria-labelledby="timer-players-label">
                       <span
-                          :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex] <= MIN_PLAYERS ? ' is-disabled' : ''}`"
+                          :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex]! <= MIN_PLAYERS ? ' is-disabled' : ''}`"
                           id="basic-addon-minus"
                           role="button"
                           aria-label="Remove last player"
-                          :aria-disabled="timerStore.playersCount[timerIndex] <= MIN_PLAYERS"
+                          :aria-disabled="timerStore.playersCount[timerIndex]! <= MIN_PLAYERS"
                           @click="timerStore.removePlayer(timerIndex)"
                       >
                         remove
                       </span>
                       <span class="align-items-center d-flex form-control justify-content-center players-number text-center" aria-live="polite">
-                        {{ timerStore.playersCount[timerIndex] }}
+                        {{ timerStore.playersCount[timerIndex]! }}
                       </span>
                       <span
-                          :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex] >= MAX_PLAYERS ? ' is-disabled' : ''}`"
+                          :class="`input-group-text material-symbols-outlined player-count-btn${timerStore.playersCount[timerIndex]! >= MAX_PLAYERS ? ' is-disabled' : ''}`"
                           id="basic-addon-plus"
                           role="button"
                           aria-label="Add player"
-                          :aria-disabled="timerStore.playersCount[timerIndex] >= MAX_PLAYERS"
+                          :aria-disabled="timerStore.playersCount[timerIndex]! >= MAX_PLAYERS"
                           @click="timerStore.addPlayer(timerIndex)"
                       >
                         add
@@ -75,24 +75,24 @@ const timerStore = useTimerStore();
 
                   <div class="align-items-center col-5 d-flex justify-content-center mx-0 px-0">
                     <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" id="progresive" v-model="timerStore.timers[timerIndex].progresive">
+                      <input class="form-check-input" type="checkbox" id="progresive" v-model="timerStore.timers[timerIndex]!.progresive">
                       <label class="form-check-label" for="progresive">Continuous</label>
                     </div>
                   </div>
 
                   <div class="text-start mb-3 px-1">
-                    <label for="timer-player-time" class="form-label">{{ `Players time (${timerStore.timers[timerIndex].players[0].timeValue} Minutes)` }}</label>
+                    <label for="timer-player-time" class="form-label">{{ `Players time (${timerStore.timers[timerIndex]!.players[0]!.timeValue} Minutes)` }}</label>
                     <input
                         type="range"
                         class="form-range"
                         :id="`timer-player-time`"
                         min="10"
                         max="120"
-                        v-model.number="timerStore.timers[timerIndex].players[0].timeValue"
+                        v-model.number="timerStore.timers[timerIndex]!.players[0]!.timeValue"
                     >
                   </div>
 
-                  <div class="col-12 players-container shadow-sm border-bottom mb-2 px-2 mx-0" v-for="(player, i) in timerStore.timers[timerIndex].players">
+                  <div class="col-12 players-container shadow-sm border-bottom mb-2 px-2 mx-0" v-for="(player, i) in timerStore.timers[timerIndex]!.players">
                     <div class="row px-0 mx-0">
                       <div class="col-8 text-start mb-3 px-0 mx-0">
                         <label :for="`timer-player-name-${i}`" class="form-label">Player name</label>
@@ -136,7 +136,10 @@ const timerStore = useTimerStore();
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import type { TimerData, PlayerData } from "~/types/models";
+import type { TimerStore } from "~/types/stores";
+
 export default {
   name: "TimerModal",
   data() {
@@ -148,7 +151,8 @@ export default {
   },
   props: {
     modalid: String,
-    timerIndex: Number
+    // Timers.vue siempre lo pasa; required solo le da el tipo number (SPEC 07)
+    timerIndex: { type: Number, required: true }
   },
   watch: {
     timerIndex() {
@@ -156,12 +160,12 @@ export default {
     }
   },
   methods: {
-    validate(timer) {
-      const errors = [];
+    validate(timer: TimerData) {
+      const errors: string[] = [];
       if (!String(timer.title ?? '').trim()) {
         errors.push('Title is required');
       }
-      timer.players.forEach((player, i) => {
+      timer.players.forEach((player: PlayerData, i: number) => {
         if (!String(player.name ?? '').trim()) {
           errors.push(`Player ${i + 1} needs a name`);
         }
@@ -172,8 +176,8 @@ export default {
       this.formMessages = '';
       this.hasErrors = false;
     },
-    saveTimer(timerStore) {
-      const errors = this.validate(timerStore.timers[this.timerIndex]);
+    saveTimer(timerStore: TimerStore) {
+      const errors = this.validate(timerStore.timers[this.timerIndex]!);
       if (errors.length) {
         // Con errores no se guarda y el modal sigue abierto
         this.hasErrors = true;
@@ -182,7 +186,7 @@ export default {
       }
       this.clearMessages();
       timerStore.syncTimer(this.timerIndex);
-      const modalEl = document.getElementById(this.modalid);
+      const modalEl = document.getElementById(this.modalid as string);
       if (modalEl) {
         this.$bootstrap.Modal.getOrCreateInstance(modalEl).hide();
       }
