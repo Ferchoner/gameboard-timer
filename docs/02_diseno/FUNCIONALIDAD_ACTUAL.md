@@ -54,7 +54,8 @@ Todas cuelgan de `baseURL: '/gameboard-timer/'`. En `/timer-app/[id]` se muestra
   quedar fuera de la lista.
 - `TimerModal` edita título, número de jugadores (+/−), modo Continuous, tiempo (10–120 min,
   slider sobre `players[0].timeValue`, guardado como número) y nombre y color de cada jugador.
-  El nombre admite hasta 20 caracteres (`MAX_NAME_LENGTH`); en la pantalla del timer, un nombre
+  El título admite hasta 40 caracteres (`MAX_TITLE_LENGTH`, SPEC 09) y el nombre hasta 20
+  (`MAX_NAME_LENGTH`); en la pantalla del timer, un nombre
   que no cabe en su tarjeta se corta con "…" (también los más largos guardados antes).
 - Jugadores: de 1 a 12 (`MIN_PLAYERS` y `MAX_PLAYERS` en `TimerStore.ts`). "+" agrega un jugador
   con el tiempo actual del timer; "−" quita al último. Cada botón se desactiva en su límite.
@@ -106,11 +107,12 @@ Proyecto Firebase `timer-42311`. **No cambiar sin una spec aprobada.**
 
 ### `Timers/{FSid}`
 
-`FSid` = `${uid}-${5 caracteres alfanuméricos}`.
+`FSid` = `${uid}-${20 caracteres alfanuméricos}` (`timerKey`, con `crypto.getRandomValues`, desde la
+SPEC 09). Los timers creados antes tienen 5 caracteres y siguen funcionando.
 
 ```js
 {
-  FSid: 'uid-a1B2c',
+  FSid: 'uid-Q8fK2mZp0LwX7cVb4NsT',
   progresive: false,        // modo Continuous
   title: 'New Timer',
   createdAt: Date,
@@ -137,7 +139,21 @@ Escrituras (`stores/TimerStore.ts`):
 ### Reglas de seguridad (`firestore.rules`)
 
 Cada usuario con sesión solo lee y escribe su `Users/{uid}` y los `Timers/{id}` cuyo id empieza con
-`{uid}-`. Lo demás queda negado. Se prueban con `npm run test:rules` y se publican a mano (ver
-`docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
+`{uid}-`. Lo demás queda negado. Se prueban con `npm run test:rules` y se publican solas con
+`.github/workflows/rules.yml` (ver `docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
+
+Desde la SPEC 09 también validan lo que se escribe (el documento completo que queda):
+
+- `Users/{uid}`: solo `email`, `username`, `firstName`, `lastName`, `uid`, `guest` y `timers`;
+  obligatorios `email`, `uid`, `guest` y `timers`; `uid` igual al id; `guest == false`; textos de
+  hasta 100 caracteres; `timers` es una lista de hasta 100.
+- `Timers/{id}`: exactamente `FSid`, `progresive`, `title`, `players`, `createdAt` y `updateAt`;
+  `FSid` igual al id; `progresive` booleano; título de 1 a 40; fechas como timestamp; de 1 a 12
+  jugadores.
+- Cada jugador: exactamente `name` (1 a 20), `color` (`#rrggbb`), `timeValue` (10 a 120) y
+  `currentTime` (0 a 120).
+- Firestore corta en 1000 expresiones por petición: `validPlayer` usa expresiones regulares para
+  que 12 jugadores quepan. Si se agregan campos o jugadores, probar el caso de 12 en
+  `npm run test:rules`.
 
 Las clases `Timer` y `Player` (en `TimerStore.ts`) definen los valores por defecto.

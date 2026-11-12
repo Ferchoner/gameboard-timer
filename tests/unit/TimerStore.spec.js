@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useTimerStore, Timer, Player, MIN_PLAYERS, MAX_PLAYERS } from '~/stores/TimerStore'
+import { useTimerStore, Timer, Player, MIN_PLAYERS, MAX_PLAYERS, timerKey } from '~/stores/TimerStore'
 import { useUserStore } from '~/stores/UserStore'
 import { useMainStore } from '~/stores/MainStore'
 
@@ -35,6 +35,17 @@ describe('Timer y Player', () => {
         expect(timer.title).toBe('Catan')
         expect(timer.players).toHaveLength(2)
         expect(timer.progresive).toBe(false)
+    })
+})
+
+describe('timerKey (SPEC 09)', () => {
+    it('da 20 caracteres alfanuméricos', () => {
+        for (let i = 0; i < 200; i++) expect(timerKey()).toMatch(/^[A-Za-z0-9]{20}$/)
+    })
+
+    it('no repite en 1000 ids seguidos', () => {
+        const keys = new Set(Array.from({ length: 1000 }, () => timerKey()))
+        expect(keys.size).toBe(1000)
     })
 })
 
@@ -102,6 +113,17 @@ describe('TimerStore', () => {
         expect(collection).toBe('Timers')
         expect(id).toBe('uid-test-abcde')
         expect(data.players.map(p => p.timeValue)).toEqual([30, 30])
+    })
+
+    it('con sesión, un timer nuevo se guarda con id uid- más 20 caracteres y sin repetir (SPEC 09)', async () => {
+        const userStore = login()
+        store.addTimer('Azul', userStore)
+        store.addTimer('Catan', userStore)
+        await vi.waitFor(() => expect(firestore.setDocument).toHaveBeenCalledTimes(2))
+        const ids = firestore.setDocument.mock.calls.map(([, id]) => id)
+        ids.forEach(id => expect(id).toMatch(/^uid-test-[A-Za-z0-9]{20}$/))
+        expect(ids[0]).not.toBe(ids[1])
+        expect(firestore.setDocument.mock.calls[0][2].FSid).toBe(ids[0])
     })
 
     it('removeTimer mantiene el índice del modal dentro de la lista', () => {

@@ -113,4 +113,13 @@ test.describe('Editor de timers (invitado)', () => {
         await openEditor(page, 0)
         await expect(page.locator('.timer-modal .modal-title')).toHaveText('New Timer')
     })
+
+    test('el título no acepta más de 40 caracteres (SPEC 09)', async ({ page }) => {
+        await createTimer(page)
+        await openEditor(page, 0)
+        const title = page.locator('.timer-modal .timer-title')
+        await title.fill('')
+        await title.pressSequentially('T'.repeat(45))
+        await expect(title).toHaveValue('T'.repeat(40))
+    })
 })

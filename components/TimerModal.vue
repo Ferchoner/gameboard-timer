@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/UserStore";
-import { useTimerStore, MIN_PLAYERS, MAX_PLAYERS, MAX_NAME_LENGTH } from "@/stores/TimerStore";
+import { useTimerStore, MIN_PLAYERS, MAX_PLAYERS, MAX_NAME_LENGTH, MAX_TITLE_LENGTH } from "@/stores/TimerStore";
 const userStore = useUserStore();
 const timerStore = useTimerStore();
 </script>
@@ -40,6 +40,7 @@ const timerStore = useTimerStore();
                         id="timer-title"
                         class="form-control timer-title mt-2"
                         placeholder="Timer one"
+                        :maxlength="MAX_TITLE_LENGTH"
                         v-model="timerStore.timers[timerIndex]!.title"
                         required
                     >

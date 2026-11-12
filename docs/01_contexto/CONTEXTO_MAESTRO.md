@@ -46,6 +46,10 @@ terminada; ahora entra en una etapa de mejoras y ajustes.
   para el JS de entrada y reglas de Firestore publicadas por `rules.yml` con una cuenta de servicio
   (secret `FIREBASE_SERVICE_ACCOUNT`); el deploy de la app no corre pruebas (spec 08, Fernando,
   2026-11-12).
+- Reglas que validan los datos: título 1–40 (también en el editor), nombre 1–20, 1–12 jugadores,
+  color hex, tiempos 10–120, `Users` con campos cerrados y hasta 100 timers; ids de timer con 20
+  caracteres de `crypto`; sin migración porque no hay cuentas reales; las reglas no limitan cuántos
+  timers se crean (App Check, otra spec) (spec 09, Fernando, 2026-11-12).
 
 ## Pendientes
 
@@ -98,3 +102,6 @@ Lista de Fernando. Cada una se trabaja con su propia spec o PR.
 - SPEC 08, CI/CD endurecida y despliegue de reglas (`specs/08-ci-cd-endurecida.md`): jobs
   paralelos, permisos, concurrencia, caché, `npm run size`, Dependabot y `rules.yml`. Implementada
   (PR #23); deploy de la app y primera publicación de reglas con `rules.yml` en verde el 2026-11-12.
+- SPEC 09, reglas de Firestore que validan los datos (`specs/09-reglas-validan-datos.md`): campos,
+  tipos y tamaños en `Users`, `Timers` y jugadores, id de timer de 20 caracteres y título de 40 en
+  el editor. Aprobada por Fernando el 2026-11-12; en implementación.
