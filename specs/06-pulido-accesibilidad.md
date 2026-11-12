@@ -1,6 +1,6 @@
 # SPEC 06 — Aviso al invitado, nombres largos, accesibilidad e iconos propios
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 01 (editor) y SPEC 04 (último cambio a los componentes de sesión)
 > **Fecha:** 2026-11-11
 > **Objetivo:** Cerrar los ajustes pequeños de la revisión QA: avisar al invitado antes de que pierda sus timers, que los nombres largos no rompan la pantalla del timer, que los controles tengan nombre accesible y que los iconos se vean sin depender de Google Fonts.
@@ -108,19 +108,19 @@ Rama `spec-06-pulido-accesibilidad`. Cada paso deja la app funcionando, con `npm
 
 ## Criterios de aceptación
 
-- [ ] `NITRO_PRESET=github-pages npm run build` termina sin errores.
-- [ ] `npm test` y `npm run test:rules` pasan en local y en la CI.
-- [ ] Sin conexión a Google, los iconos se ven como iconos y no como texto.
-- [ ] La app no pide Material Symbols a `fonts.googleapis.com` ni a `fonts.gstatic.com`. Las fuentes de texto (Handjet y Khand, en `master.scss`) siguen en Google Fonts y quedan fuera de esta spec.
-- [ ] Los iconos se ven igual que antes, porque son la misma fuente y la misma variante.
-- [ ] Todo icono usado en `components/` está en el subconjunto; si no, falla una prueba.
-- [ ] Un lector de pantalla anuncia "Play {título}", "Edit {título}", "Delete {título}" y "New timer" en la lista.
-- [ ] Cada etiqueta del login, el registro y el editor, al tocarla, enfoca su campo.
-- [ ] El nombre de un jugador no pasa de 20 caracteres en el editor.
-- [ ] Con 12 jugadores, un nombre largo se corta con "…" y no se sale de su tarjeta.
-- [ ] Como invitado con al menos un timer, recargar o cerrar pide confirmación, y la lista muestra el aviso.
-- [ ] Con sesión, o sin timers, no hay diálogo ni aviso.
-- [ ] `FUNCIONALIDAD_ACTUAL.md` documenta el color en hex.
+- [x] `NITRO_PRESET=github-pages npm run build` termina sin errores.
+- [x] `npm test` y `npm run test:rules` pasan en local y en la CI.
+- [x] Sin conexión a Google, los iconos se ven como iconos y no como texto.
+- [x] La app no pide Material Symbols a `fonts.googleapis.com` ni a `fonts.gstatic.com`. Las fuentes de texto (Handjet y Khand, en `master.scss`) siguen en Google Fonts y quedan fuera de esta spec.
+- [x] Los iconos se ven igual que antes, porque son la misma fuente y la misma variante.
+- [x] Todo icono usado en `components/` está en el subconjunto; si no, falla una prueba.
+- [x] Un lector de pantalla anuncia "Play {título}", "Edit {título}", "Delete {título}" y "New timer" en la lista.
+- [x] Cada etiqueta del login, el registro y el editor, al tocarla, enfoca su campo.
+- [x] El nombre de un jugador no pasa de 20 caracteres en el editor.
+- [x] Con 12 jugadores, un nombre largo se corta con "…" y no se sale de su tarjeta.
+- [x] Como invitado con al menos un timer, recargar o cerrar pide confirmación, y la lista muestra el aviso.
+- [x] Con sesión, o sin timers, no hay diálogo ni aviso.
+- [x] `FUNCIONALIDAD_ACTUAL.md` documenta el color en hex.
 
 ## Decisiones
 
