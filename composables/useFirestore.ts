@@ -7,7 +7,7 @@ type QueryCondition = { field: string, filter: WhereFilterOp, value: unknown }
 export default function() {
     const { $firestore } = useNuxtApp()
 
-    const isReady = (): Boolean => {
+    const isReady = (): boolean => {
         return !!$firestore;
     }
 

@@ -4,7 +4,7 @@ import type { UserCredential, NextOrObserver, User } from 'firebase/auth'
 export default function() {
     const { $auth } = useNuxtApp()
 
-    const isReady = (): Boolean => {
+    const isReady = (): boolean => {
         return !!$auth;
     }
 
