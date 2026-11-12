@@ -1,14 +1,12 @@
 import { test as base, expect } from '@playwright/test'
 
-// Errores de consola que no vienen de la app: recursos que no cargan (Firebase o Google Fonts sin
-// red). Cualquier otro error de consola o excepción hace fallar la prueba.
+// Errores de consola que no vienen de la app: recursos que no cargan (Firebase sin red).
+// Cualquier otro error de consola o excepción hace fallar la prueba.
 const IGNORED_CONSOLE = [/^Failed to load resource/]
 
 export const test = base.extend({
     page: async ({ page }, use) => {
         const errors = []
-        // No enviar visitas de las pruebas a Google Analytics
-        await page.route(/google-analytics\.com|googletagmanager\.com/, route => route.abort())
         page.on('pageerror', error => errors.push(`pageerror: ${error.message}`))
         page.on('console', message => {
             if (message.type() !== 'error') return

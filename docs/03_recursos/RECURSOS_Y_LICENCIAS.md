@@ -10,6 +10,8 @@ orígenes ni licencias: lo desconocido queda como **pendiente**.
 | Icono de carga | `assets/images/loading_icon.svg` | `IsLoadingComponent.vue` | Pendiente | Pendiente |
 | Favicons y manifest | `public/*.png`, `favicon.ico`, `safari-pinned-tab.svg`, `site.webmanifest`, `browserconfig.xml` | `nuxt.config.ts` | Pendiente | Pendiente |
 | Material Symbols Outlined (subconjunto) | `assets/fonts/material-symbols-outlined.woff2` | Iconos de botones (`assets/css/_icons.scss`) | Google Fonts, variante `opsz 48, wght 400, FILL 0, GRAD 0` | Apache 2.0 (`assets/fonts/LICENSE-material-symbols.txt`) |
+| Handjet (variable, pesos 100–900, subconjunto latino) | `assets/fonts/handjet-latin.woff2` | Textos y números del timer (`assets/css/_fonts.scss`) | Google Fonts (proyecto en github.com/google/fonts, `ofl/handjet`) | SIL OFL 1.1 (`assets/fonts/LICENSE-handjet.txt`) |
+| Khand 500 y 700 (subconjunto latino) | `assets/fonts/khand-500-latin.woff2`, `assets/fonts/khand-700-latin.woff2` | Nombres de jugador y títulos (`assets/css/_fonts.scss`) | Google Fonts (proyecto en github.com/google/fonts, `ofl/khand`) | SIL OFL 1.1 (`assets/fonts/LICENSE-khand.txt`) |
 | Bootstrap 5 | dependencia npm | Estilos y modales | Bootstrap | MIT |
 
 ### Iconos (Material Symbols)
@@ -23,6 +25,8 @@ en `ICON_NAMES` de `scripts/update-icon-font.mjs`. Para usar un icono nuevo:
 3. Hacer commit del `.woff2` nuevo junto con el cambio.
 
 Si se usa un icono que no está en la lista, `tests/unit/icons.spec.js` falla y dice cuál falta.
-Las fuentes de texto (Handjet y Khand) siguen llegando de Google Fonts desde `master.scss`.
+Las fuentes de texto (Handjet y Khand) se sirven desde `assets/fonts/` desde la SPEC 10: solo el
+subconjunto latino (incluye acentos y ñ), Handjet como fuente variable y Khand en los pesos 500 y 700.
+La app ya no pide nada a Google Fonts al cargar.
 
 Al agregar un recurso nuevo: anotarlo aquí con ruta, uso, origen y licencia en el mismo PR.

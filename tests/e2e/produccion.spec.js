@@ -20,6 +20,21 @@ test.describe('Producción bajo /gameboard-timer/', () => {
         }
     })
 
+    test('no pide nada a Google Fonts ni a Analytics y usa las fuentes locales (SPEC 10)', async ({ page }) => {
+        const external = []
+        page.on('request', req => {
+            if (/fonts\.googleapis\.com|fonts\.gstatic\.com|googletagmanager\.com|google-analytics\.com/.test(req.url())) {
+                external.push(req.url())
+            }
+        })
+        await openApp(page, '')
+        await page.evaluate(() => document.fonts.ready)
+        const loaded = await page.evaluate(() => [...document.fonts]
+            .filter(font => font.status === 'loaded').map(font => font.family.replace(/["']/g, '')))
+        expect(loaded).toContain('Handjet')
+        expect(external).toEqual([])
+    })
+
     test('si Firebase no responde, el loading avisa y ofrece recargar', async ({ page }) => {
         // Auth no termina de arrancar si IndexedDB nunca responde: la sesión queda sin comprobar
         await page.addInitScript(() => {
