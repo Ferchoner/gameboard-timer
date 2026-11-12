@@ -24,6 +24,10 @@ jobs:
         env:
           NITRO_PRESET: github-pages
 
+      # Revisa los tipos de los .ts y .vue con vue-tsc (SPEC 07)
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Pruebas unitarias
         run: npm run test:unit
 

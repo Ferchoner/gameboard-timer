@@ -11,7 +11,6 @@ export default function () {
     const request = async () => {
         if (!isSupported() || sentinel || document.visibilityState !== 'visible') return
         try {
-            // @ts-ignore
             const lock = await navigator.wakeLock.request('screen')
             sentinel = lock
             isActive.value = true

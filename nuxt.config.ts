@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-// @ts-ignore
 export default defineNuxtConfig({
     app: {
         head: {
@@ -7,7 +6,7 @@ export default defineNuxtConfig({
             meta: [
                 { charset: 'utf-8'},
                 { name: 'viewport', content: 'width=device-width, initial-scale=1'},
-                { hid: 'description', name: 'description', content: 'Gameboard timers'},
+                { name: 'description', content: 'Gameboard timers'},
                 { name: 'msapplication-TileColor', content: '#ffffff'},
                 { name: 'theme-color', content: '#ffffff'}
             ],
@@ -34,13 +33,6 @@ export default defineNuxtConfig({
     modules: [
         '@pinia/nuxt'
     ],
-    pinia: {
-        autoImports: [
-            // automatically imports `defineStore`
-            'defineStore', // import { defineStore } from 'pinia'
-            ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
-        ],
-    },
     devtools: { enabled: true },
     css: [
         '~/assets/css/master.scss'
