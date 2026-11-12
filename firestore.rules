@@ -1,20 +1,90 @@
 rules_version = '2';
 
-// Reglas de Firestore de Timer for Friends (SPEC 04).
+// Reglas de Firestore de Timer for Friends (SPEC 04 y SPEC 09).
 // Cada usuario con sesión solo puede leer y escribir:
 // - su documento Users/{uid}
-// - los Timers cuyo id empieza con "{uid}-", el formato que usa la app (`${uid}-${5 caracteres}`)
-// Todo lo demás queda negado. Se publican a mano desde la consola de Firebase
-// (ver docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md) y se prueban con `npm run test:rules`.
+// - los Timers cuyo id empieza con "{uid}-" seguido de caracteres alfanuméricos
+//   (la app usa `${uid}-` + 20 caracteres desde la SPEC 09; antes, 5)
+// Además, lo que se escribe debe tener los campos, tipos y tamaños que escribe la app (SPEC 09).
+// Todo lo demás queda negado. Se publican solas con .github/workflows/rules.yml al cambiar en
+// master y se prueban con `npm run test:rules`.
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function isText(value, min, max) {
+      return value is string && value.size() >= min && value.size() <= max;
+    }
+
+    // Users/{uid}: campos cerrados, uid igual al id, nunca invitado, hasta 100 timers
+    function validUser(data, uid) {
+      return data.keys().hasOnly(['email', 'username', 'firstName', 'lastName', 'uid', 'guest', 'timers'])
+        && data.keys().hasAll(['email', 'uid', 'guest', 'timers'])
+        && data.uid == uid
+        && data.guest == false
+        && isText(data.email, 0, 100)
+        && (!('username' in data) || isText(data.username, 0, 100))
+        && (!('firstName' in data) || isText(data.firstName, 0, 100))
+        && (!('lastName' in data) || isText(data.lastName, 0, 100))
+        && data.timers is list
+        && data.timers.size() <= 100;
+    }
+
+    // Un jugador: nombre 1-20, color #rrggbb, tiempos en minutos (editor de 10 a 120).
+    // Se escribe compacto (expresiones regulares en vez de tipo + tamaño) porque se evalúa hasta
+    // 12 veces y Firestore corta en 1000 expresiones por petición: con la versión larga, 10
+    // jugadores ya pasaban el tope. Un campo que falta o con otro tipo da error al leerlo, y eso
+    // niega la escritura.
+    function validPlayer(p) {
+      return p.keys().hasOnly(['name', 'color', 'timeValue', 'currentTime'])
+        && p.name.matches('^.{1,20}$')
+        && p.color.matches('^#[0-9a-fA-F]{6}$')
+        && p.timeValue is number && p.timeValue >= 10 && p.timeValue <= 120
+        && p.currentTime is number && p.currentTime >= 0 && p.currentTime <= 120;
+    }
+
+    // Las reglas no tienen bucles: se valida cada posición hasta la 12
+    function validPlayers(ps) {
+      return ps is list && ps.size() >= 1 && ps.size() <= 12
+        && validPlayer(ps[0])
+        && (ps.size() <= 1 || validPlayer(ps[1]))
+        && (ps.size() <= 2 || validPlayer(ps[2]))
+        && (ps.size() <= 3 || validPlayer(ps[3]))
+        && (ps.size() <= 4 || validPlayer(ps[4]))
+        && (ps.size() <= 5 || validPlayer(ps[5]))
+        && (ps.size() <= 6 || validPlayer(ps[6]))
+        && (ps.size() <= 7 || validPlayer(ps[7]))
+        && (ps.size() <= 8 || validPlayer(ps[8]))
+        && (ps.size() <= 9 || validPlayer(ps[9]))
+        && (ps.size() <= 10 || validPlayer(ps[10]))
+        && (ps.size() <= 11 || validPlayer(ps[11]));
+    }
+
+    // Timers/{timerId}: campos cerrados, FSid igual al id, título 1-40, de 1 a 12 jugadores
+    function validTimer(data, timerId) {
+      return data.keys().hasOnly(['FSid', 'progresive', 'title', 'players', 'createdAt', 'updateAt'])
+        && data.keys().hasAll(['FSid', 'progresive', 'title', 'players', 'createdAt', 'updateAt'])
+        && data.FSid == timerId
+        && data.progresive is bool
+        && isText(data.title, 1, 40)
+        && data.createdAt is timestamp
+        && data.updateAt is timestamp
+        && validPlayers(data.players);
+    }
+
+    function isTimerOwner(timerId) {
+      return request.auth != null && timerId.matches(request.auth.uid + '-[A-Za-z0-9]+');
+    }
+
     match /Users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && validUser(request.resource.data, uid);
     }
 
     match /Timers/{timerId} {
-      allow read, write: if request.auth != null
-        && timerId.matches(request.auth.uid + '-[A-Za-z0-9]+');
+      allow read, delete: if isTimerOwner(timerId);
+      allow create, update: if isTimerOwner(timerId)
+        && validTimer(request.resource.data, timerId);
     }
   }
 }
