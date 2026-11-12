@@ -18,7 +18,7 @@
     "@firebase/rules-unit-testing": "6.0.0",
     "@nuxt/devtools": "^4.1.0",
     "@playwright/test": "^1.65.0",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.6.6",
     "firebase-tools": "15.35.0",
     "nuxt": "^4.6.4",
     "typescript": "6.0.3",
