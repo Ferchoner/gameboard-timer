@@ -12,6 +12,7 @@ Leyenda: ✅ comprobado · ⚠️ con observaciones · ⬜ pendiente.
 |---|---|
 | Build de producción | `NITRO_PRESET=github-pages npm run build` sin errores |
 | Tipos | `npm run typecheck` sin errores |
+| Tamaño del JS | `npm run size`: el chunk de entrada no pasa de 420 KB gzip |
 | Reloj (`useCountdown`) | `npm run test:unit`: inicio, pausa, tiempo real sin intervalos, aviso único al llegar a 0, reinicios, sin intervalos tras `dispose` |
 | Store (`TimerStore`) | `npm run test:unit`: límites de 1 y 12 jugadores, "−" quita al último, tiempo común como número, índice en rango, Firestore solo con sesión, guardado del reloj solo con cambios, borrar quita la referencia por id, aviso si falla una escritura |
 | Sesión (`UserStore`) | `npm run test:unit`, con Firebase simulado: registro sin `accessToken`, se borra al iniciar sesión, cuenta sin documento se repara, timers borrados se ignoran, una sola carga por login |

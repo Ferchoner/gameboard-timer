@@ -25,5 +25,6 @@ npm run test:e2e                           # E2E en escritorio y móvil emulado
 npm run test:rules                         # reglas de Firestore en el emulador (Java 21+)
 ```
 
-La CI corre el build, las unitarias, las reglas y las E2E en cada PR. Las reglas de Firestore
-(`firestore.rules`) se publican a mano desde la consola de Firebase.
+La CI corre el build, el typecheck, las unitarias, las reglas, el tamaño del JS (`npm run size`)
+y las E2E en cada PR. Las reglas de Firestore (`firestore.rules`) se publican solas con
+`.github/workflows/rules.yml` cuando cambian en `master`.

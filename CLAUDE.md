@@ -66,7 +66,13 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
   Las specs se escriben en español (`Borrador`, `En revisión`, `Aprobado`, `Implementado`, `Obsoleto`).
 - Antes de abrir un PR: `npm run build` y `npm run typecheck` sin errores, `npm test` en verde y la checklist manual de
   `docs/07_publicacion/CHECKLIST_PRUEBAS.md` en lo que toque el cambio. La CI
-  (`.github/workflows/ci.yml`) repite el build, el typecheck, las unitarias y las E2E en cada PR.
+  (`.github/workflows/ci.yml`) repite el build, el typecheck, las unitarias, las reglas, el tamaño
+  del JS y las E2E en cada PR, en jobs paralelos. El check que exige el ruleset de `master` es
+  **Build y pruebas**: no cambiarle el nombre (SPEC 08).
+- Workflows: `ci.yml` (cada PR), `main.yml` (publica la app en cada push a `master`) y `rules.yml`
+  (publica `firestore.rules` cuando cambian en `master`). Dependabot (`.github/dependabot.yml`)
+  abre PRs de actualización cada lunes. Las acciones van fijadas por SHA con la versión en un
+  comentario.
 - Un cambio de comportamiento lleva su prueba en `tests/unit/` o `tests/e2e/`.
 - Al terminar: informa archivos modificados, pruebas hechas, riesgos y siguiente paso, y revisa
   qué documentos de `docs/` y el `README.md` quedaron desfasados.
@@ -87,8 +93,10 @@ Toda la documentación vive en `docs/`. Si algo aquí contradice `docs/`, gana `
   Chromium de escritorio y móvil emulado. Antes: `NITRO_PRESET=github-pages npm run build`. La
   primera vez: `npx playwright install chromium`.
 - `npm test` — unitarias y E2E.
+- `npm run size` — falla si el JavaScript de entrada del build pasa de 420 KB gzip
+  (`scripts/check-bundle-size.mjs`). Antes: `NITRO_PRESET=github-pages npm run build`.
 - `npm run test:rules` — pruebas de `firestore.rules` con el emulador de Firestore
-  (`tests/rules/`). Necesita Java 21 o posterior; la CI lo instala. Las reglas no se publican con
-  el deploy: Fernando las pega en la consola (ver `docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
+  (`tests/rules/`). Necesita Java 21 o posterior; la CI lo instala. Las reglas se publican solas
+  con `rules.yml` tras el merge, si cambian (ver `docs/07_publicacion/PUBLICACION_GITHUB_PAGES.md`).
 
 No hay linter configurado.
