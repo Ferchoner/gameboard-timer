@@ -36,10 +36,22 @@ test.describe('Producción bajo /gameboard-timer/', () => {
     })
 
     test('si Firebase no responde, el loading avisa y ofrece recargar', async ({ page }) => {
-        // Auth no termina de arrancar si IndexedDB nunca responde: la sesión queda sin comprobar
+        // Hay una sesión guardada y Google nunca contesta: Auth no termina de comprobarla.
+        // (Colgar IndexedDB ya no sirve: desde firebase 13.4 Auth corta a los pocos segundos
+        // y sigue sin sesión guardada, así que el loading se cerraba antes de los 15 s.)
         await page.addInitScript(() => {
-            window.indexedDB.open = () => new EventTarget()
+            // Mismo formato y clave que guarda Firebase Auth (clave = apiKey de plugins/firebase.client.ts)
+            localStorage.setItem('firebase:authUser:AIzaSyACYdTWhjXpt6JQwQvl--jL9xEwYlUuCnQ:[DEFAULT]', JSON.stringify({
+                uid: 'usuarioDePrueba',
+                email: 'ana@example.com',
+                emailVerified: false,
+                isAnonymous: false,
+                providerData: [],
+                stsTokenManager: { refreshToken: 'refresh', accessToken: 'token', expirationTime: Date.now() + 3600000 }
+            }))
         })
+        // Las peticiones a Auth y Firestore se quedan colgadas, sin respuesta ni error
+        await page.route(/identitytoolkit\.googleapis\.com|securetoken\.googleapis\.com|firestore\.googleapis\.com/, () => {})
         await page.clock.install()
         await page.goto('')
         const loading = page.locator('.loading-container')
